@@ -1,0 +1,2 @@
+meal#pizza#10#hot
+meal#salat#15#cold
