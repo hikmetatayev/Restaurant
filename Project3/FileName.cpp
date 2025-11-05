@@ -145,12 +145,22 @@ class Meal {
 	vector<IngredientWthKg> neededIngsKG;
 	vector<IngredientWthPcs> neededIngsPCS;
 
+	int howMany;
+
 public:
 	Meal(string name, double price,string type) {
 
 		setName(name);
 		setPrice(price);
 		setType(type);
+	}
+
+	void setHowMany(int howMany) {
+		if (howMany<0)
+		{
+			throw string("Amount cannot be negative");
+		}
+		this->howMany = howMany;
 	}
 
 	void setName(string& name) {
@@ -193,6 +203,12 @@ public:
 	string getType()const noexcept {
 
 		return type;
+	}
+
+	int getHowMany()const noexcept{
+	
+		return howMany;
+
 	}
 
 	void addIngKg(IngredientWthKg ing) {
@@ -424,6 +440,8 @@ class HotDrink {
 	string name;
 	double price;
 	string type = "hot";
+
+	int howMany;
 public:
 	HotDrink(string name, double price){
 		setName(name);
@@ -450,6 +468,16 @@ public:
 		this->price = price;
 	}
 
+	void setHowMany(int howMany) {
+	
+		if (howMany<0)
+		{
+			throw string("Amount cannot be negative");
+		}
+		this->howMany = howMany;
+
+	}
+
 	string getName()const noexcept {
 
 		return name;
@@ -458,6 +486,12 @@ public:
 	double getPrice()const noexcept {
 		return price;
 	}
+
+	int getHowMany()const noexcept {
+	
+		return howMany;
+	}
+
 	void Show() {
 		cout << this->getName() << " - $" << this->getPrice() << endl;
 	}
@@ -467,6 +501,8 @@ class ColdDrink{
 	string name;
 	double price;
 	string type = "cold";
+
+	int howMany;
 public:
 	ColdDrink(string name, double price) {
 		setName(name);
@@ -495,6 +531,17 @@ public:
 		this->price = price;
 	}
 
+	void setHowMany(int howMany) {
+
+		if (howMany < 0)
+		{
+			throw string("Amount cannot be negative");
+		}
+		this->howMany = howMany;
+
+	}
+
+
 	string getName()const noexcept {
 
 		return name;
@@ -502,6 +549,12 @@ public:
 	}
 	double getPrice()const noexcept {
 		return price;
+	
+	}
+
+	int getHowMany()const noexcept {
+
+		return howMany;
 	}
 
 	void Show() {
@@ -515,12 +568,109 @@ class Cart {
 	vector<HotDrink> hotdrinks;
 	vector<ColdDrink> colddrinks;
 
+
+public:
+
+
+	void addMealToCart(Meal meal) {
+	
+		meals.push_back(meal);
+	
+	}
+
+	void addHotDrinkToCart(HotDrink drink) {
+	
+		hotdrinks.push_back(drink);
+	
+	}
+
+	void addColdDrinkToCart(ColdDrink drink) {
+	
+		colddrinks.push_back(drink);
+	
+	}
+
+	int getSizeMeals() {
+	
+		return meals.size();
+
+	}
+
+	int getSizeHotDrinks() {
+	
+		return hotdrinks.size();
+
+	}
+
+	int getSizeColdDrinks() {
+	
+		return colddrinks.size();
+
+	}
+
+	string getNameofMeal(int index) {
+	
+		return meals[index].getName();
+
+	}
+
+	string getNameofHotDrink(int index) {
+	
+		return hotdrinks[index].getName();
+
+	}
+
+	string getNameofColdDrink(int index) {
+	
+		return colddrinks[index].getName();
+
+	}
+
+	int getHowManyofMeal(int index) {
+
+		return meals[index].getHowMany();
+
+	}
+
+	int getHowManyofHotDrink(int index) {
+
+		return hotdrinks[index].getHowMany();
+
+	}
+
+	int getHowManyofColdDrink(int index) {
+
+		return colddrinks[index].getHowMany();
+
+	}
+
+	void Show() {
+	
+		cout << "------Meals------" << endl;
+		for (size_t i = 0; i < meals.size(); i++)
+		{
+			cout << i+1 << ". " << meals[i].getName() << "  -  $" << meals[i].getPrice() << "   Amount: " << meals[i].getHowMany() << "   Price:   $" <<meals[i].getPrice()*meals[i].getHowMany()<< endl;
+		}
+		cout << "------Hot Drinks------" << endl;
+		for (size_t i = 0; i < hotdrinks.size(); i++)
+		{
+			cout << i+1 << ". " << hotdrinks[i].getName() << "  -  $" << hotdrinks[i].getPrice() << "   Amount: " << hotdrinks[i].getHowMany() << "   Price:   $" << hotdrinks[i].getPrice()* colddrinks[i].getHowMany()<< endl;
+		}
+		cout << "------Cold Drinks------" << endl;
+		for (size_t i = 0; i < colddrinks.size(); i++)
+		{
+			cout << i+1 << ". " << colddrinks[i].getName() << "  -  $" << colddrinks[i].getPrice() << "   Amount: " << colddrinks[i].getHowMany() << "   Price:   $" << colddrinks[i].getPrice()* colddrinks[i].getHowMany()<< endl;
+		}
+	
+	}
+
 };
 
 class User {
 
 	string username;
 	string password;
+	vector<Cart> cartHistory;
 
 	void setPassword(string& password) {
 		if (password.length() < 8)
@@ -532,6 +682,88 @@ class User {
 	}
 
 public:
+
+	void saveDataToHistory(){
+
+		ofstream fs("carthistory.txt");
+		if (!fs.is_open()) throw string("File couldn't open...");
+
+		for (auto& m : cartHistory){
+			fs << username<<"#";
+
+			for (size_t i = 0; i < m.getSizeMeals(); i++)
+			{
+				fs <<"meal#" << m.getNameofMeal(i) << "#" << m.getHowManyofMeal(i)<<"#";
+			}
+			for (size_t i = 0; i < m.getSizeHotDrinks(); i++)
+			{
+				fs << "hotdrink#" << m.getNameofHotDrink(i) << "#" << m.getHowManyofHotDrink(i)<< "#";
+			}
+			for (size_t i = 0; i < m.getSizeColdDrinks(); i++)
+			{
+				fs << "cold#" << m.getNameofColdDrink(i) << "#" << m.getHowManyofColdDrink(i)<< "#";
+			}
+
+			fs << "\n";
+		}
+
+		
+
+		fs.close();
+
+	}
+
+	void loadDataFromHistory() {
+		ifstream fs("carthistory.txt");
+		if (!fs.is_open()) throw string("File couldn't open...");
+
+		cartHistory.clear();
+		string line;
+
+		while (getline(fs, line)) {
+			if (line.empty()) continue;
+
+			stringstream ss(line);
+			string token;
+			vector<string> parts;
+
+			while (getline(ss, token, '#')) {
+				parts.push_back(token);
+			}
+
+			if (parts.size() < 2) continue;
+
+			string fileUsername = parts[0];
+			Cart cart;
+
+			for (size_t i = 1; i + 2 < parts.size(); i += 3) {
+				string type = parts[i];
+				string name = parts[i + 1];
+				int count = stoi(parts[i + 2]);
+
+				if (type == "meal") {
+					Meal m(name,0,"hot");
+					m.setHowMany(count);
+					cart.addMealToCart(m);
+				}
+				else if (type == "hotdrink") {
+					HotDrink h(name,0);
+					h.setHowMany(count);
+					cart.addHotDrinkToCart(h);
+				}
+				else if (type == "cold") {
+					ColdDrink c(name,0);
+					c.setHowMany(count);
+					cart.addColdDrinkToCart(c);
+				}
+			}
+
+			cartHistory.push_back(cart);
+		}
+
+		fs.close();
+	}
+
 	User(string& username, string& password) {
 	
 		setUsername(username);
@@ -559,7 +791,19 @@ public:
 		this->username = username;
 	}
 
+	void addCart(Cart cart) {
 	
+		cartHistory.push_back(cart);
+	
+	}
+
+	int getSizeCartHistory() {
+	
+		return cartHistory.size();
+	}
+
+
+
 };
 
 class Menu {
@@ -872,15 +1116,33 @@ public:
 		cout << endl;
 
 	}
+
+	double getPriceMeal(int index) {
+	
+		return meals[index].getPrice();
+	
+	}
+
+	double getPriceHotDrink(int index) {
+	
+		return hotdrinks[index].getPrice();
+	
+	}
+
+	double getPriceColdDrink(int index) {
+	
+		return colddrinks[index].getPrice();
+	
+	}
+
 };
 
 class Restaurant {
 
 	vector<User> users;
 	Menu menu;
-	Cart cart;
 	Stock stock;
-
+	Cart cart;
 public:
 
 	Restaurant() {
@@ -893,6 +1155,24 @@ public:
 		}
 
 	}
+
+	void saveHistory(){
+	
+		for(auto&u:users)
+		{
+			u.saveDataToHistory();
+		}
+	
+	}
+
+	void loadHistory() {
+	
+		for (auto& u : users)
+		{
+			u.loadDataFromHistory();
+		}
+	
+	};
 
 	void saveUsers() {
 		ofstream fs("users.txt");
@@ -941,6 +1221,7 @@ public:
 		stock.saveDatatoStock();
 		menu.saveDatatoMenu();
 		menu.saveDatatoMeals();
+		saveHistory();
 		saveUsers();
 
 	}
@@ -949,7 +1230,9 @@ public:
 		stock.loadDatafromStock();
 		menu.loadDataFromMenu();
 		menu.loadDataFromMeals();
+		
 		loadUsers();
+		loadHistory();
 	}
 
 	void ShowMenu() {
@@ -989,6 +1272,21 @@ public:
 
 		this->stock.addIngredientPCS(ing);
 
+	}
+
+	void addMealCart(Meal meal) {
+	
+		cart.addMealToCart(meal);
+	}
+
+	void addHotDrinkCart(HotDrink drink) {
+	
+		cart.addHotDrinkToCart(drink);
+	}
+
+	void addColdDrinkCart(ColdDrink drink) {
+	
+		cart.addColdDrinkToCart(drink);
 	}
 
 	int SearchMeal(string& name) {
@@ -1082,6 +1380,12 @@ public:
 		stock.ShowIngPcs(index);
 	}
 
+	void ShowCart() {
+	
+		cart.Show();
+	
+	}
+
 	double getIngredientMassKG(int index) {
 		return stock.getIngMassKG(index);
 
@@ -1123,6 +1427,39 @@ public:
 
 	string getPassword(int index) {
 		return users[index].getPassword();
+	}
+
+	double getPriceofMeal(int index) {
+	
+		return menu.getPriceMeal(index);
+	}
+
+	double getPriceofHotDrink(int index) {
+	
+		return menu.getPriceHotDrink(index);
+	}
+
+	double getPriceofColdDrink(int index) {
+	
+		return menu.getPriceColdDrink(index);
+	}
+
+	int getSizeOfCartMeals() {
+		return cart.getSizeMeals();
+	}
+
+	int getSizeOfCartHotDrinks() {
+		return cart.getSizeHotDrinks();
+	}
+
+	int getSizeOfCartColdDrinks() {
+		return cart.getSizeColdDrinks();
+	}
+
+	void addCartToUser(int index) {
+	
+		users[index].addCart(cart);
+
 	}
 
 };
@@ -1873,15 +2210,14 @@ void main() {
 					cout << "Enter password: ";
 					getline(cin, password);
 
-					int index = restaurant.SearchUser(username);
+					int indexUser = restaurant.SearchUser(username);
 
-					if (index==-1)
+					if (indexUser==-1)
 					{
 						cout << "Username or password is wrong" << endl; continue;
-
 					}
 
-					if (restaurant.getPassword(index)!=password)
+					if (restaurant.getPassword(indexUser)!=password)
 					{
 						cout << "Username or password is wrong" << endl; continue;
 					}
@@ -1893,7 +2229,8 @@ void main() {
 						cout << "1. Show Menu" << endl;
 						cout << "2. Add to Cart" << endl;
 						cout << "3. See Your Cart" << endl;
-						cout << "4. Exit" << endl;
+						cout << "4. See Your History" << endl;
+						cout << "5. Exit" << endl;
 						cout << "\n> ";
 
 						cin >> choise;
@@ -1902,11 +2239,148 @@ void main() {
 						{
 							restaurant.ShowMenu();
 						}
+
+						else if (choise == '2') {
+						
+							while(1){
+
+								cout << "1. Add meal" << endl;
+								cout << "2. Add Drink" << endl;
+								cout << "3. Finish" << endl;
+								cout << "\n> ";
+								cin >> choise;
+								cin.ignore();
+
+							if (choise=='1') {
+
+								string nameMeal;
+								int howManyMeal;
+								string type;
+
+								cout << "1. Hot meal\n2. Cold meal" << endl;
+								getline(cin, type); 
+
+								if (type=="1")
+								{
+									type = "hot";
+								}
+								else if (type == "2") {
+								
+									type = "cold";
+								}
+								else {
+									cout << "Wrong choice" << endl;
+									continue;
+								}
+
+								cout << "Enter name of meal: " << endl;
+								getline(cin,nameMeal);
+
+								int indexMeal = restaurant.SearchMeal(nameMeal);
+
+								if (indexMeal==-1)
+								{
+									cout << "There is no this meal in menu or it is out of stock." << endl;
+									continue;
+								}
+
+								cout << "How many portions you want: "<<endl;
+								cin >> howManyMeal;
+								cin.ignore();
+
+								Meal cartMeal(nameMeal,restaurant.getPriceofMeal(indexMeal),type);
+
+								cartMeal.setHowMany(howManyMeal);
+
+								restaurant.addMealCart(cartMeal);
+							}
+
+							else if (choise == '2') {
+							
+								string type;
+								string nameDrink;
+								int howManyDrink;
+								cout << "1. Hot Drink\n2. Cold Drink" << endl;
+								getline(cin, type);
+
+								if (type == "1")
+								{
+									cout << "Enter name of drink: " << endl;
+									getline(cin, nameDrink);
+
+									int indexDrink = restaurant.SearchHotDrink(nameDrink);
+
+									if (indexDrink == -1)
+									{
+										cout << "There is no this Drink in menu or it is out of stock." << endl;
+										continue;
+									}
+									cout << "How many portions you want: " << endl;
+									cin >> howManyDrink;
+									cin.ignore();
+
+									HotDrink cartHotDrink(nameDrink, restaurant.getPriceofHotDrink(indexDrink));
+									cartHotDrink.setHowMany(howManyDrink);
+
+									restaurant.addHotDrinkCart(cartHotDrink);
+
+								}
+
+								else if (type == "2") {
+
+									cout << "Enter name of drink: " << endl;
+									getline(cin, nameDrink);
+
+									int indexDrink = restaurant.SearchColdDrink(nameDrink);
+
+									if (indexDrink == -1)
+									{
+										cout << "There is no this Drink in menu or it is out of stock." << endl;
+										continue;
+									}
+									cout << "How many portions you want: " << endl;
+									cin >> howManyDrink;
+									cin.ignore();
+
+									ColdDrink cartColdDrink(nameDrink, restaurant.getPriceofColdDrink(indexDrink));
+									cartColdDrink.setHowMany(howManyDrink);
+
+									restaurant.addColdDrinkCart(cartColdDrink);
+								}
+
+
+
+								else {
+									cout << "Wrong choice" << endl;
+									continue;
+								}																								
+							}
+							
+							else if (choise == '3') { 
+								break; 
+							}
+
+							else { 
+								cout << "Wrong Choice" << endl; continue; 
+							}
+							} 							
+
+						}
+
+						else if (choise == '3') {
+						
+							cout << "----Meals----" << endl<<endl;
+							
+							restaurant.ShowCart();
+
+						
+						}
 					}
 
 
 
 				}
+
 				else if (choise == '2') {
 				
 					string username, password, confirmpass;
@@ -1928,6 +2402,7 @@ void main() {
 				
 					if (password!=confirmpass)
 					{
+						cout << "Passwords do not match";
 						continue;
 					}
 					
@@ -1936,6 +2411,9 @@ void main() {
 					restaurant.addUser(user);
 					restaurant.saveData();
 
+				}
+				else if (choise == '3') {
+					break;
 				}
 			
 			}
