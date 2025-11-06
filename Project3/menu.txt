@@ -1,3 +1,2 @@
 meal#pizza#10#hot
-meal#salat#15#cold
-Colddrink#Cola#5#cold
+Colddrink#cola#3.5#cold

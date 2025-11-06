@@ -7,6 +7,8 @@
 
 using namespace std;
 
+double balance=0, totalP=0;
+
 class IngredientWthKg {
 	string name;
 	double mass;
@@ -405,6 +407,16 @@ public:
 
 	}
 
+	double getIngPriceKG(int index) {
+	
+		return ingKG[index].getPrice();
+	}
+
+	double getIngPricePCS(int index) {
+	
+		return ingPCS[index].getPrice();
+	}
+
 	int getIngCountPCS(int index) {
 	
 		return ingPCS[index].getCount();
@@ -568,6 +580,7 @@ class Cart {
 	vector<HotDrink> hotdrinks;
 	vector<ColdDrink> colddrinks;
 
+	double totalP=0;
 
 public:
 
@@ -575,19 +588,24 @@ public:
 	void addMealToCart(Meal meal) {
 	
 		meals.push_back(meal);
+
+		this->totalP += meal.getPrice() * meal.getHowMany();
 	
 	}
 
 	void addHotDrinkToCart(HotDrink drink) {
 	
 		hotdrinks.push_back(drink);
+
+		this->totalP += drink.getPrice() * drink.getHowMany();
 	
 	}
 
 	void addColdDrinkToCart(ColdDrink drink) {
 	
 		colddrinks.push_back(drink);
-	
+
+		this->totalP += drink.getPrice() * drink.getHowMany();
 	}
 
 	int getSizeMeals() {
@@ -612,6 +630,11 @@ public:
 	
 		return meals[index].getName();
 
+	}
+
+	string getTypeofMeal(int index) {
+	
+		return meals[index].getType();
 	}
 
 	string getNameofHotDrink(int index) {
@@ -644,6 +667,105 @@ public:
 
 	}
 
+	double getPriceofMeal(int index) {
+	
+		return meals[index].getPrice();
+
+	}
+
+	double getPriceofHotDrink(int index) {
+	
+		return hotdrinks[index].getPrice();
+
+	}
+
+	double getPriceofColdDrink(int index) {
+	
+		return colddrinks[index].getPrice();
+
+	}
+
+	double getTotalP() {
+	
+		return totalP;
+	}
+
+	void setTotalP(double totalP) {
+	
+		this->totalP = totalP;
+	
+	}
+
+	void setHowManyofMeal(int index,int qty) {
+	
+		meals[index].setHowMany(qty);
+	
+	}
+
+	void setHowManyofHotDrink(int index,int qty) {
+	
+		hotdrinks[index].setHowMany(qty);
+	
+	}
+
+	void setHowManyofColdDrink(int index,int qty) {
+	
+		colddrinks[index].setHowMany(qty);
+	
+	}
+
+	void removeMeal(int index) {
+	
+		meals.erase(meals.begin() + index);
+
+		this->totalP -= meals[index].getPrice() * meals[index].getHowMany();
+	
+	}
+
+	void removeHotDrink(int index) {
+	
+		hotdrinks.erase(hotdrinks.begin() + index);
+
+		this->totalP -= hotdrinks[index].getPrice() * hotdrinks[index].getHowMany();
+	
+	}
+
+	void removeColdDrink(int index) {
+	
+		colddrinks.erase(colddrinks.begin() + index);
+
+		this->totalP -= colddrinks[index].getPrice() * colddrinks[index].getHowMany();
+
+	
+	}
+
+	
+
+	int getSizeofNeedPCS(int index) {
+	
+		return meals[index].getSizeOfIngPcs();
+
+	}
+
+	string getNeedNameKg(int indexMeal,int indexIng) {
+	
+		return meals[indexMeal].getNameofIngKG(indexIng);
+	
+	}
+
+	string getNeedNamePcs(int indexMeal,int indexIng) {
+	
+		return meals[indexMeal].getNameofIngPCS(indexIng);
+	
+	}
+
+	int getAmountNeedKg(int indexMeal,int indexIng) {
+		return meals[indexMeal].getKgofIngKG(indexIng);
+	}
+	int getAmountNeedPcs(int indexMeal,int indexIng) {
+		return meals[indexMeal].getCountofIngPCS(indexIng);
+	}
+
 	void Show() {
 	
 		cout << "------Meals------" << endl;
@@ -661,6 +783,16 @@ public:
 		{
 			cout << i+1 << ". " << colddrinks[i].getName() << "  -  $" << colddrinks[i].getPrice() << "   Amount: " << colddrinks[i].getHowMany() << "   Price:   $" << colddrinks[i].getPrice()* colddrinks[i].getHowMany()<< endl;
 		}
+
+		cout << endl << "Total Payment:     $" << totalP << endl;
+	
+	}
+
+	void ClearAll() {
+	
+		meals.clear();
+		hotdrinks.clear();
+		colddrinks.clear();
 	
 	}
 
@@ -683,35 +815,6 @@ class User {
 
 public:
 
-	void saveDataToHistory(){
-
-		ofstream fs("carthistory.txt");
-		if (!fs.is_open()) throw string("File couldn't open...");
-
-		for (auto& m : cartHistory){
-			fs << username<<"#";
-
-			for (size_t i = 0; i < m.getSizeMeals(); i++)
-			{
-				fs <<"meal#" << m.getNameofMeal(i) << "#" << m.getHowManyofMeal(i)<<"#";
-			}
-			for (size_t i = 0; i < m.getSizeHotDrinks(); i++)
-			{
-				fs << "hotdrink#" << m.getNameofHotDrink(i) << "#" << m.getHowManyofHotDrink(i)<< "#";
-			}
-			for (size_t i = 0; i < m.getSizeColdDrinks(); i++)
-			{
-				fs << "cold#" << m.getNameofColdDrink(i) << "#" << m.getHowManyofColdDrink(i)<< "#";
-			}
-
-			fs << "\n";
-		}
-
-		
-
-		fs.close();
-
-	}
 
 	void loadDataFromHistory() {
 		ifstream fs("carthistory.txt");
@@ -751,7 +854,7 @@ public:
 					h.setHowMany(count);
 					cart.addHotDrinkToCart(h);
 				}
-				else if (type == "cold") {
+				else if (type == "colddrink") {
 					ColdDrink c(name,0);
 					c.setHowMany(count);
 					cart.addColdDrinkToCart(c);
@@ -791,7 +894,7 @@ public:
 		this->username = username;
 	}
 
-	void addCart(Cart cart) {
+	void addCart(const Cart& cart) {
 	
 		cartHistory.push_back(cart);
 	
@@ -802,7 +905,89 @@ public:
 		return cartHistory.size();
 	}
 
+	void showCartHistory() {
+	
+		for (size_t i = 0; i < cartHistory.size(); i++)
+		{
+			cartHistory[i].Show();
+		}
 
+	}
+	
+	int getSizeMeals(int index) {
+	
+		return cartHistory[index].getSizeMeals();
+
+	}
+
+	int getSizeHotDrinks(int index) {
+	
+		return cartHistory[index].getSizeHotDrinks();
+
+	}
+
+	int getSizeColdDrinks(int index) {
+	
+		return cartHistory[index].getSizeColdDrinks();
+
+	}
+
+	string getNameOfMealIndex(int indexUser,int indexMeal) {
+	
+		return cartHistory[indexUser].getNameofMeal(indexMeal);
+	
+	}
+
+	string getNameOfHotDrinkIndex(int index,int hots) {
+	
+		return cartHistory[index].getNameofHotDrink(hots);
+	
+	}
+
+	string getNameOfColdDrinkIndex(int index,int colds) {
+	
+		return cartHistory[index].getNameofColdDrink(colds);
+	
+	}
+	
+	int getHowManyOfMealIndex(int indexUser,int indexMeal) {
+	
+		return cartHistory[indexUser].getHowManyofMeal(indexMeal);
+	
+	}
+	
+	int getHowManyOfHotDrinkIndex(int index,int hots) {
+	
+		return cartHistory[index].getHowManyofHotDrink(hots);
+	
+	}
+	
+	int getHowManyOfColdDrinkIndex(int index,int colds) {
+	
+		return cartHistory[index].getHowManyofColdDrink(colds);
+	
+	}
+
+	double getPriceOfMealIndex(int index,int indexM) {
+	
+		return cartHistory[index].getPriceofMeal(indexM);
+	}
+
+	double getPriceOfHotDrinkIndex(int index,int indexM) {
+	
+		return cartHistory[index].getPriceofHotDrink(indexM);
+	}
+
+	double getPriceOfColdDrinkIndex(int index,int indexM) {
+	
+		return cartHistory[index].getPriceofColdDrink(indexM);
+	}
+
+	double getTotalPayment(int index) {
+	
+		return cartHistory[index].getTotalP();
+	
+	}
 
 };
 
@@ -1022,28 +1207,28 @@ public:
 				coldmeals.push_back(meals[i]);
 			}
 		}
-		cout << "O------------  HOT MEALS  ------------O" << endl;
+		cout << "O------------  HOT MEALS  ------------O\n" << endl;
 		for (size_t i = 0; i < hotmeals.size(); i++)
 		{
 			hotmeals[i].Show();
 		}
-		cout << "O------------  COLD MEALS  ------------O" << endl;
+		cout << "\nO------------  COLD MEALS  ------------O\n" << endl;
 		for (size_t i = 0; i < coldmeals.size(); i++)
 		{
 			coldmeals[i].Show();
 		}
 		
-		cout << "O------------  COLD DRINKS  ------------O" << endl;
+		cout << "\nO------------  COLD DRINKS  ------------O\n" << endl;
 		for (size_t i = 0; i < colddrinks.size(); i++)
 		{
 			colddrinks[i].Show();
 		}
-		cout << "O------------  HOT DRINKS  ------------O" << endl;
+		cout << "\nO------------  HOT DRINKS  ------------O\n" << endl;
 		for (size_t i = 0; i < hotdrinks.size(); i++)
 		{
 			hotdrinks[i].Show();
 		}
-	
+		cout << endl;
 	}
 
 	void addMeal(Meal meal) {	
@@ -1143,6 +1328,8 @@ class Restaurant {
 	Menu menu;
 	Stock stock;
 	Cart cart;
+
+	double balance = 0;
 public:
 
 	Restaurant() {
@@ -1156,24 +1343,140 @@ public:
 
 	}
 
+	void saveBalance() {
+		ofstream fs("balance.txt");
+
+		if (!fs.is_open()) throw string("File couldn't open...");
+		fs << balance << "\n";
+
+		fs.close();
+	
+	}
+
+	void loadBalance() {
+	
+		ifstream fs("balance.txt");
+		if (!fs.is_open()) throw string("File not found...");
+		if (fs.peek() == ifstream::traits_type::eof()) throw string("File empty...");
+
+		string row;
+
+		getline(fs, row);
+
+		this->setBalance(stod(row));
+
+		fs.close();
+
+	}
+
 	void saveHistory(){
 	
-		for(auto&u:users)
+		ofstream fs("carthistory.txt");
+
+		if (!fs.is_open()) throw string("File couldn't open...");
+
+		for (size_t t = 0; t < users.size(); t++)
 		{
-			u.saveDataToHistory();
+			fs << users[t].getUsername();
+			for (size_t i = 0; i < users[t].getSizeCartHistory(); i++)
+			{
+				for (size_t j = 0; j < users[t].getSizeMeals(i); j++)
+				{
+					fs << "#meal#" << users[t].getNameOfMealIndex(i,j) << "#" << users[t].getHowManyOfMealIndex(i,j)<<"#"<<users[t].getPriceOfMealIndex(i,j);
+				}
+				for (size_t j = 0; j < users[t].getSizeHotDrinks(i); j++)
+				{
+					fs << "#hotdrink#" << users[t].getNameOfHotDrinkIndex(i, j) << "#" << users[t].getHowManyOfHotDrinkIndex(i, j) << "#" << users[t].getPriceOfHotDrinkIndex(i, j);
+				}
+				for (size_t j = 0; j < users[t].getSizeColdDrinks(i); j++)
+				{
+					fs << "#colddrink#" << users[t].getNameOfColdDrinkIndex(i, j) << "#" << users[t].getHowManyOfColdDrinkIndex(i, j) << "#" << users[t].getPriceOfColdDrinkIndex(i, j);
+				}
+
+				
+			}
+			fs << "\n";
 		}
+				
+		fs.close();
 	
 	}
 
 	void loadHistory() {
 	
-		for (auto& u : users)
-		{
-			u.loadDataFromHistory();
-		}
-	
-	};
+		ifstream fs("carthistory.txt");
+		if (!fs.is_open()) throw string("File not found...");
+		if (fs.peek() == ifstream::traits_type::eof()) throw string("File empty...");
 
+		string row;
+		while (getline(fs, row)) {
+			vector<string> parts;
+			string temp;
+			for (char ch : row) {
+				if (ch == '#') {
+					parts.push_back(temp);
+					temp.clear();
+				}
+				else temp += ch;
+			}
+			parts.push_back(temp);
+	
+			Cart newCart;
+			string name = parts[0];
+			int index = this->SearchUser(name);
+
+			if (index == -1)
+			{
+				continue;
+			}
+
+			for (size_t i = 1; i < parts.size(); i+=4)
+			{
+
+				if (parts[i]=="meal")
+				{
+					string nameMeal = parts[i + 1];
+					int amount = stoi(parts[i + 2]);
+					double price = stod(parts[i + 3]);
+
+					Meal meal(nameMeal, price, "hot");
+					meal.setHowMany(amount);
+					newCart.addMealToCart(meal);
+				}
+				else if (parts[i]=="hotdrink")
+				{
+					string nameHotD = parts[i + 1];
+					int amount = stoi(parts[i + 2]);
+					double price = stod(parts[i + 3]);
+
+					HotDrink drink(nameHotD, price);
+					drink.setHowMany(amount);
+					newCart.addHotDrinkToCart(drink);
+				}
+				else if (parts[i]=="colddrink")
+				{
+					string nameColdD = parts[i + 1];
+					int amount = stoi(parts[i + 2]);
+					double price = stod(parts[i + 3]);
+
+					ColdDrink drink(nameColdD, price);
+					drink.setHowMany(amount);
+					newCart.addColdDrinkToCart(drink);
+				}
+
+			}
+
+			users[index].addCart(newCart);
+			
+
+			
+
+		}
+
+		fs.close();
+	
+	}
+	
 	void saveUsers() {
 		ofstream fs("users.txt");
 		if (!fs.is_open()) throw string("File couldn't open...");
@@ -1218,20 +1521,23 @@ public:
 	}
 
 	void saveData() {
+
+		saveBalance();
 		stock.saveDatatoStock();
 		menu.saveDatatoMenu();
 		menu.saveDatatoMeals();
-		saveHistory();
 		saveUsers();
-
+		saveHistory();
+		
 	}
 
 	void loadData() {
+		loadBalance();
 		stock.loadDatafromStock();
 		menu.loadDataFromMenu();
-		menu.loadDataFromMeals();
-		
+		menu.loadDataFromMeals();	
 		loadUsers();
+
 		loadHistory();
 	}
 
@@ -1274,8 +1580,8 @@ public:
 
 	}
 
-	void addMealCart(Meal meal) {
-	
+	void addMealCart(Meal& meal) {
+		
 		cart.addMealToCart(meal);
 	}
 
@@ -1295,7 +1601,7 @@ public:
 
 	}
 
-	int SearchIngredient(string& name, string& type) {
+	int SearchIngredient(string name, string type) {
 		return stock.SearchIng(name, type);
 	}
 
@@ -1386,9 +1692,25 @@ public:
 	
 	}
 
+	void ShowCartHistory(int index) {
+
+		users[index].showCartHistory();
+
+	}
+
 	double getIngredientMassKG(int index) {
 		return stock.getIngMassKG(index);
 
+	}
+
+	double getIngredientPriceKG(int index) {
+	
+		return stock.getIngPriceKG(index);
+	}
+
+	double getIngredientPricePCS(int index) {
+	
+		return stock.getIngPricePCS(index);
 	}
 
 	int getInredientCountPcs(int index) {
@@ -1444,8 +1766,19 @@ public:
 		return menu.getPriceColdDrink(index);
 	}
 
-	int getSizeOfCartMeals() {
-		return cart.getSizeMeals();
+	
+
+	
+	int getSizeofNeedPCS(int index) {
+	
+		return cart.getSizeofNeedPCS(index);
+	
+	}
+
+	string getIngNameKG(int indexMeal,int indexIng) {
+	
+		
+	
 	}
 
 	int getSizeOfCartHotDrinks() {
@@ -1462,6 +1795,138 @@ public:
 
 	}
 
+	bool updateCartQuantity(const string& itemName, int newQty) {
+
+		for (size_t i = 0; i < cart.getSizeMeals(); i++)
+		{
+			if (cart.getNameofMeal(i)==itemName)
+			{
+				cart.setHowManyofMeal(i,newQty);
+				return true;
+			}
+			
+		}
+		for (size_t i = 0; i < cart.getSizeHotDrinks(); i++)
+		{
+			if (cart.getNameofHotDrink(i)==itemName)
+			{
+				cart.setHowManyofHotDrink(i,newQty);
+				return true;
+			}
+			
+		}
+		for (size_t i = 0; i < cart.getSizeColdDrinks(); i++)
+		{
+			if (cart.getNameofColdDrink(i)==itemName)
+			{
+				cart.setHowManyofColdDrink(i,newQty);
+				return true;
+			}
+			
+		}
+
+
+		
+		return false;
+	}
+
+	bool removeItemFromCart(const string& itemName) {
+
+		for (size_t i = 0; i < cart.getSizeMeals(); i++)
+		{
+			if (cart.getNameofMeal(i) == itemName)
+			{
+				cart.removeMeal(i);
+				return true;
+			}
+
+		}
+		for (size_t i = 0; i < cart.getSizeHotDrinks(); i++)
+		{
+			if (cart.getNameofHotDrink(i) == itemName)
+			{
+				cart.removeHotDrink(i);
+				return true;
+			}
+
+		}
+		for (size_t i = 0; i < cart.getSizeColdDrinks(); i++)
+		{
+			if (cart.getNameofColdDrink(i) == itemName)
+			{
+				cart.removeColdDrink(i);
+				return true;
+			}
+
+		}
+
+
+
+		return false;
+	}
+
+	bool isCartEmpty(bool answer = true) {
+	
+		if (cart.getSizeMeals()>0)
+		{
+			answer = false;
+			return answer;
+		}
+		if (cart.getSizeHotDrinks()>0)
+		{
+			answer = false;
+			return answer;
+		}
+		if (cart.getSizeColdDrinks()>0)
+		{
+			answer = false;
+			return answer;
+		}
+		return answer;
+	
+	}
+
+	void clearCart() {
+		cart.ClearAll();
+	
+	}
+
+	double getBalance() {
+		return balance;
+	}
+
+	void setBalance(double b) {
+		if (b<0)
+		{
+			throw string("Balance cannot be negative");
+		}
+		this->balance = b;
+	}
+
+	void showBalance() {
+
+		cout << "Balance:   $" << this->balance << endl;
+
+	}
+
+	void addBalance(double adding) {
+	
+		this->setBalance(this->getBalance() + adding);
+	}
+
+	void reduceBalance(double reduce) {
+	
+		this->setBalance(this->getBalance() - reduce);
+	}
+
+	double getCartTotalPayment() {
+	
+		return cart.getTotalP();
+
+	}
+
+	
+
 };
 
 
@@ -1477,19 +1942,21 @@ void main() {
 	cout << endl;
 	cout << "                             T O   V A L H A L L A" << endl << endl << endl;
 	char choise;
+
 	while (true)
 	{
 		cout << "Enter the restaurant system" << endl << endl;
 		cout << "1. Admin Panel" << endl;
 		cout << "2. User Panel" << endl;
 		cout << "3. Exit" << endl;
-		cout << "\n>";
+		cout << "\n> ";
 
 		cin >> choise;
 		cin.ignore();
+
 		if (choise=='1'){
 
-			system("cls");
+			system("cls"); 
 			string username, password;
 			
 			cout << "Enter username: ";
@@ -1501,12 +1968,15 @@ void main() {
 			{
 				bool running = true;
 				system("cls");
+
 				cout << "Welcome to the system BOSS" << endl<<endl;
 				while(running){
 				cout << "Choose where do you want to make change: \n" << endl;
 				cout << "1. Menu" << endl;
 				cout << "2. Stock" << endl;
-				cout << "3. Back" << endl;
+				cout << "3. See Balance" << endl;
+				cout << "4. Add Balance" << endl;
+				cout << "5. Back" << endl;
 				cout << "\n> ";
 				cin >> choise;
 				cin.ignore();
@@ -1515,6 +1985,7 @@ void main() {
 				switch (choise)  {
 
 				case '1':
+
 					while(true){
 						
 						cout << "1. Show Menu Items" << endl;
@@ -1528,12 +1999,12 @@ void main() {
 
 					cin >> choise;
 					cin.ignore();
+					system("cls");
 
 					if (choise=='1')
 					{
-						system("cls");
 						restaurant.ShowMenu();
-
+						cout << endl << endl;
 					}
 
 					else if (choise == '2') {
@@ -1541,12 +2012,14 @@ void main() {
 						string type;
 						string mealname;
 						double price;
-						cout << "Type of Meal: " << endl;
+						cout << "Type of Meal: \n" << endl;
 						cout << "1. Hot" << endl;
 						cout << "2. Cold" << endl;
-						cout << "> ";
+						cout << "\n> ";
 
 						getline(cin, type);
+						
+						
 
 						if (type=="1")
 						{
@@ -1557,10 +2030,9 @@ void main() {
 						}
 						else {
 							cout << "Wrong choice!!!" << endl;
-
 						}
 
-						cout << "Enter name of meal: ";
+						cout << "\nEnter name of meal: ";
 						getline(cin, mealname);
 
 						if (restaurant.SearchMeal(mealname) != -1) {
@@ -1572,24 +2044,27 @@ void main() {
 						cout << "Enter the price of meal: ";
 						cin >> price;
 						cin.ignore();
-
+						system("cls");
 						Meal meal(mealname, price,type);
+						
+						cout << "Meal Created Successfully\n" << endl;
 
 						while(1){
 							cout << "1. Add ingredient" << endl;
 							cout << "2. Finish" << endl;
-							cout << "> ";
+							cout << "\n> ";
 							cin >> choise;
 							cin.ignore();
+							system("cls");
 							if (choise=='1')
 							{
 								string ingType;
 								string ingName;
 								double mass; int count;
-								cout << "Ingredient will be by: " << endl;
+								cout << "Ingredient will be by: \n" << endl;
 								cout << "1. kg" << endl;
 								cout << "2. pieces" << endl;
-								cout << "> ";
+								cout << "\n> ";
 								getline(cin, ingType);
 								cout << "Enter the ing name: ";
 								getline(cin, ingName);
@@ -1601,14 +2076,19 @@ void main() {
 									cout << "Enter the amount of ingredient(kg): ";
 									cin>> mass;
 									cin.ignore();
+									system("cls");
 									IngredientWthKg neededIng(ingName, mass);
 									meal.addIngKg(neededIng);
+
+									cout << "Ingredient Added Successfully\n" << endl;
+
 								}
 								else if (ingType=="2")
 								{
 									cout << "Enter the amount of ingredient(pieces): ";
 									cin >> count;
 									cin.ignore();
+									system("cls");
 									IngredientWthPcs neededIng(ingName, count);
 									meal.addIngPcs(neededIng);
 								}
@@ -1618,7 +2098,8 @@ void main() {
 								}
 							}
 							else if (choise == '2') {
-								restaurant.addNewMeal(meal);	
+								restaurant.addNewMeal(meal);
+								cout << "Meal was added Menu successfully\n" << endl;
 								break;
 							}
 						}
@@ -1822,9 +2303,11 @@ void main() {
 					}
 
 				}
+
 				break;
 
 				case '2':
+
 					while(1){
 
 					cout << "1. Show Stock Items" << endl;
@@ -1852,7 +2335,7 @@ void main() {
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
-							cout << "3. Finish adding ingredient" << endl;
+							cout << "3. Finish" << endl;
 							cout << "\n> ";
 
 							cin >> choise;
@@ -1873,8 +2356,10 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to buy: ";
 									cin >> mass;
 									cin.ignore();
+									double price = restaurant.getIngredientPriceKG(index)*mass;
 									double newmass = mass + restaurant.getIngredientMassKG(index);
 									restaurant.setIngredientMassKg(index, newmass);
+									restaurant.reduceBalance(price);
 									restaurant.saveData();
 
 								}else{
@@ -1888,8 +2373,9 @@ void main() {
 
 								IngredientWthKg ing(name, mass);
 								ing.setPrice(price);
-
+								double redprice = mass * price;
 								restaurant.addNewIngredientKg(ing);
+								restaurant.reduceBalance(redprice);
 								restaurant.saveData();
 								}
 							}
@@ -1900,7 +2386,7 @@ void main() {
 								int pieces;
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
-
+								double redprice;
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
@@ -1908,6 +2394,7 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to buy: ";
 									cin >> pieces;
 									cin.ignore();
+									redprice = pieces * restaurant.getIngredientPricePCS(index);
 									double newpieces = pieces + restaurant.getInredientCountPcs(index);
 									restaurant.setIngredientCountPcs(index, newpieces);
 									restaurant.saveData();
@@ -1923,8 +2410,9 @@ void main() {
 
 								IngredientWthPcs ing(name, pieces);
 								ing.setPrice(price);
-
+								redprice = pieces * price;
 								restaurant.addNewIngredientPcs(ing);
+								restaurant.reduceBalance(redprice);
 								restaurant.saveData();
 								}
 							}
@@ -1950,7 +2438,7 @@ void main() {
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
-							cout << "3. Finish decreasing ingredient" << endl;
+							cout << "3. Finish" << endl;
 							cout << "\n> ";
 
 							cin >> choise;
@@ -2030,7 +2518,7 @@ void main() {
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
-							cout << "3. Finish deleting ingredient" << endl;
+							cout << "3. Finish ingredient" << endl;
 							cout << "\n> ";
 
 							cin >> choise;
@@ -2176,6 +2664,20 @@ void main() {
 				break;
 
 				case '3':
+					restaurant.showBalance();
+
+					break;
+				case '4':
+					double adding;
+					cout << "Enter the amount of money you want to add: " << endl;
+					cout << "> ";
+					cin >> adding;
+					cin.ignore();
+
+					restaurant.addBalance(adding);
+
+					break;
+				case '5':
 					running = false;
 					break;
 				}			
@@ -2221,11 +2723,10 @@ void main() {
 					{
 						cout << "Username or password is wrong" << endl; continue;
 					}
+					cout << "Welcome to the VALHALLA restaurant " << username << endl << endl;
 
 					while (true)
 					{
-						cout << "Welcome to the VALHALLA restaurant " << username << endl<<endl<<endl;
-
 						cout << "1. Show Menu" << endl;
 						cout << "2. Add to Cart" << endl;
 						cout << "3. See Your Cart" << endl;
@@ -2235,6 +2736,7 @@ void main() {
 
 						cin >> choise;
 						cin.ignore();
+
 						if (choise=='1')
 						{
 							restaurant.ShowMenu();
@@ -2291,8 +2793,8 @@ void main() {
 								Meal cartMeal(nameMeal,restaurant.getPriceofMeal(indexMeal),type);
 
 								cartMeal.setHowMany(howManyMeal);
-
-								restaurant.addMealCart(cartMeal);
+								cout << "\nAdded to cart successfully" << endl;
+								restaurant.addMealCart(cartMeal);								
 							}
 
 							else if (choise == '2') {
@@ -2348,8 +2850,6 @@ void main() {
 									restaurant.addColdDrinkCart(cartColdDrink);
 								}
 
-
-
 								else {
 									cout << "Wrong choice" << endl;
 									continue;
@@ -2368,12 +2868,104 @@ void main() {
 						}
 
 						else if (choise == '3') {
-						
-							cout << "----Meals----" << endl<<endl;
-							
-							restaurant.ShowCart();
 
+							restaurant.ShowCart();
+							cout << endl;
+
+							while (true) {
+								cout << "\n1. Finish and Pay" << endl;
+								cout << "2. Edit Cart" << endl;
+								cout << "3. Back" << endl;
+								cout << "\n> ";
+								cin >> choise;
+								cin.ignore();
+
+
+
+								if (choise == '1') {
+									if (restaurant.isCartEmpty()) {
+										cout << "Your cart is empty!" << endl;
+										continue;
+									}
+
+									restaurant.addBalance(restaurant.getCartTotalPayment());
+									restaurant.addCartToUser(indexUser);
+									restaurant.saveData();
+									restaurant.clearCart();
+									cout << "Payment successful. Thank you for your purchase!" << endl;
+									break;
+								}
+
+								else if (choise == '2') {
+									while (true) {
+										system("cls");
+										cout << "=== Editing Your Cart ===" << endl;
+										restaurant.ShowCart();
+										cout << "\n1. Change quantity" << endl;
+										cout << "2. Remove item" << endl;
+										cout << "3. Clear entire cart" << endl;
+										cout << "4. Back" << endl;
+										cout << "\n> ";
+										cin >> choise;
+										cin.ignore();
+
+										if (choise == '1') {
+											string itemName;
+											int newQty;
+											cout << "Enter item name to edit: ";
+											getline(cin, itemName);
+											cout << "Enter new quantity: ";
+											cin >> newQty;
+											cin.ignore();
+											if (!restaurant.updateCartQuantity(itemName, newQty))
+												cout << "Item not found in cart!" << endl;
+											else
+												cout << "Quantity updated successfully!" << endl;
+										}
+
+										else if (choise == '2') {
+											string itemName;
+											cout << "Enter item name to remove: ";
+											getline(cin, itemName);
+											if (!restaurant.removeItemFromCart(itemName))
+												cout << "Item not found in cart!" << endl;
+											else
+												cout << "Item removed successfully!" << endl;
+										}
+										else if (choise == '3') {
+											restaurant.clearCart();
+											cout << "Cart cleared successfully!" << endl;
+										}
+										else if (choise == '4') {
+											break;
+										}
+										else {
+											cout << "Wrong choice!" << endl;
+										}
+									}
+								}
+
+								else if (choise == '3') {
+									break;
+								}
+								else {
+									cout << "Wrong choice!" << endl;
+								}
+							}
+}
+
+						else if (choise == '4') {
 						
+							restaurant.ShowCartHistory(indexUser);
+						
+						}
+
+						else if (choise == '5') {
+							break;
+						}
+						else {
+							cout << "Wrong Choice!!"<<endl;
+							continue;
 						}
 					}
 
@@ -2412,6 +3004,7 @@ void main() {
 					restaurant.saveData();
 
 				}
+
 				else if (choise == '3') {
 					break;
 				}
