@@ -1,2 +1,2 @@
-meal#pizza#10#hot#Parmezan#0.2#sausage#15
+meal#pizza#10#hot#Parmezan#0.2
 Colddrink#cola#3.5#cold

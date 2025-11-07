@@ -377,7 +377,7 @@ public:
 		fs.close();
 	}
 
-	int SearchIng(string& name, string& type) {
+	int SearchIng(string name, string type) {
 	
 		if (type=="kg")
 		{
@@ -1149,7 +1149,7 @@ public:
 		fs.close();
 	}
 
-	int SearchMealInMenu(string& name) {
+	int SearchMealInMenu(string name) {
 	
 		for (size_t i = 0; i < meals.size(); i++)
 		{
@@ -1320,6 +1320,38 @@ public:
 	
 	}
 
+	int getSizeOfMealNeedIngKg(int index) {
+	
+		return meals[index].getSizeOfIngKg();
+	}
+
+	string getNameOfMealNeedIngKg(int indexMeal,int indexIng) {
+	
+		return meals[indexMeal].getNameofIngKG(indexIng);
+	
+	}
+
+	double getMassOfMealNeedIngKg(int indexMeal, int indexIng) {
+	
+		return meals[indexMeal].getKgofIngKG(indexIng);
+	
+	}
+	int getSizeOfMealNeedIngPcs(int index) {
+	
+		return meals[index].getSizeOfIngPcs();
+	}
+
+	string getNameOfMealNeedIngPcs(int indexMeal,int indexIng) {
+	
+		return meals[indexMeal].getNameofIngPCS(indexIng);
+	
+	}
+
+	int getCountOfMealNeedIngPcs(int indexMeal, int indexIng) {
+	
+		return meals[indexMeal].getCountofIngPCS(indexIng);
+	
+	}
 };
 
 class Restaurant {
@@ -1802,7 +1834,8 @@ public:
 			if (cart.getNameofMeal(i)==itemName)
 			{
 				cart.setHowManyofMeal(i,newQty);
-				return true;
+
+				return this->checkIng(itemName,newQty);
 			}
 			
 		}
@@ -1925,7 +1958,102 @@ public:
 
 	}
 
-	
+	bool checkIng(string name, int amount) {
+
+
+		int indexMenuIng = menu.SearchMealInMenu(name);
+
+		for (size_t i = 0; i < menu.getSizeOfMealNeedIngKg(indexMenuIng); i++)
+		{
+			string name = menu.getNameOfMealNeedIngKg(indexMenuIng, i);
+
+			int indexIng = stock.SearchIng(name, "kg");
+
+			if (indexIng == -1)
+			{
+				return false;
+			}
+
+			double mass = menu.getMassOfMealNeedIngKg(indexMenuIng, i) * amount;
+
+			if (stock.getIngMassKG(indexIng) < mass)
+			{
+				return false;
+			}
+
+		}
+
+
+		for (size_t i = 0; i < menu.getSizeOfMealNeedIngPcs(indexMenuIng); i++)
+		{
+			string name = menu.getNameOfMealNeedIngPcs(indexMenuIng, i);
+
+			int indexIng = stock.SearchIng(name, "pieces");
+
+			if (indexIng == -1)
+			{
+				return false;
+			}
+
+			int pieces = menu.getCountOfMealNeedIngPcs(indexMenuIng, i) * amount;
+
+			if (stock.getIngCountPCS(indexIng) < pieces)
+			{
+				return false;
+			}
+
+		}
+
+		return true;
+
+	}
+
+	bool removeFromStock() {
+		// For every meal in cart
+		for (size_t i = 0; i < cart.getSizeMeals(); ++i) {
+			int indexMenuMeal = menu.SearchMealInMenu(cart.getNameofMeal(i));
+			int amount = cart.getHowManyofMeal(i);
+
+			// subtract kg ingredients
+			for (size_t j = 0; j < menu.getSizeOfMealNeedIngKg(indexMenuMeal); ++j) {
+				string ingName = menu.getNameOfMealNeedIngKg(indexMenuMeal, j);
+				int indexStockIng = stock.SearchIng(ingName, "kg");
+				if (indexStockIng == -1) {
+					cout << "Error: Ingredient '" << ingName << "' not found in stock (kg)." << endl;
+					return false;
+				}
+				double needed = menu.getMassOfMealNeedIngKg(indexMenuMeal, j) * amount;
+				double available = stock.getIngMassKG(indexStockIng);
+				if (available < needed) {
+					cout << "Error: Not enough '" << ingName << "' in stock (kg). Needed: " << needed << ", available: " << available << endl;
+					return false;
+				}
+				stock.setIngMassKg(indexStockIng, available - needed);
+			}
+
+			// subtract pieces ingredients
+			for (size_t j = 0; j < menu.getSizeOfMealNeedIngPcs(indexMenuMeal); ++j) {
+				string ingName = menu.getNameOfMealNeedIngPcs(indexMenuMeal, j);
+				int indexStockIng = stock.SearchIng(ingName, "pieces");
+				if (indexStockIng == -1) {
+					cout << "Error: Ingredient '" << ingName << "' not found in stock (pieces)." << endl;
+					return false;
+				}
+				int neededPieces = menu.getCountOfMealNeedIngPcs(indexMenuMeal, j) * amount;
+				int availablePieces = stock.getIngCountPCS(indexStockIng);
+				if (availablePieces < neededPieces) {
+					cout << "Error: Not enough '" << ingName << "' in stock (pieces). Needed: " << neededPieces << ", available: " << availablePieces << endl;
+					return false;
+				}
+				stock.setIngCountPcs(indexStockIng, availablePieces - neededPieces);
+			}
+		}
+
+		// Now subtract hot/cold drinks if stored similarly (example - adapt to your data model).
+		// ... (if you have hot/cold drinks in cart and they are stored in stock, do the same checks here)
+
+		return true;
+	}
 
 };
 
@@ -2790,11 +2918,18 @@ void main() {
 								cin >> howManyMeal;
 								cin.ignore();
 
+								if (!restaurant.checkIng(nameMeal, howManyMeal))
+								{
+									cout << "Sorry There is not enough ingredients for this meal for today." << endl;
+									continue;
+								}						
+
 								Meal cartMeal(nameMeal,restaurant.getPriceofMeal(indexMeal),type);
 
 								cartMeal.setHowMany(howManyMeal);
 								cout << "\nAdded to cart successfully" << endl;
-								restaurant.addMealCart(cartMeal);								
+								restaurant.addMealCart(cartMeal);	
+
 							}
 
 							else if (choise == '2') {
@@ -2888,6 +3023,12 @@ void main() {
 										continue;
 									}
 
+									if (!restaurant.removeFromStock()) {
+										cout << "Payment aborted: could not remove items from stock. Please review your cart or contact admin." << endl;
+										// optionally show cart again or break/continue depending on desired behavior
+										continue; // keep user in cart menu so they can fix it
+									}
+
 									restaurant.addBalance(restaurant.getCartTotalPayment());
 									restaurant.addCartToUser(indexUser);
 									restaurant.saveData();
@@ -2918,7 +3059,7 @@ void main() {
 											cin >> newQty;
 											cin.ignore();
 											if (!restaurant.updateCartQuantity(itemName, newQty))
-												cout << "Item not found in cart!" << endl;
+												cout << "Item not found in cart! or Not Enough ingredient!" << endl;
 											else
 												cout << "Quantity updated successfully!" << endl;
 										}
