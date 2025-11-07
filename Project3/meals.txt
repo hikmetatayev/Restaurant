@@ -1,2 +1,7 @@
 meal#pizza#10#hot#Parmezan#0.2
 Colddrink#cola#3.5#cold
+Colddrink#cola#2#cold
+Colddrink#cola#2#cold
+Colddrink#Sprite#12#cold
+Colddrink#Spritee#12#cold
+Colddrink#Spriteee#12#cold

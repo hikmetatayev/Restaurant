@@ -4,10 +4,16 @@
 #include <memory>
 #include<fstream>
 #include<sstream>
+#include<windows.h>
+#include <cstdlib>
 
 using namespace std;
 
-double balance=0, totalP=0;
+
+void setColor(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
 
 class IngredientWthKg {
 	string name;
@@ -2009,12 +2015,12 @@ public:
 	}
 
 	bool removeFromStock() {
-		// For every meal in cart
+		
 		for (size_t i = 0; i < cart.getSizeMeals(); ++i) {
 			int indexMenuMeal = menu.SearchMealInMenu(cart.getNameofMeal(i));
 			int amount = cart.getHowManyofMeal(i);
 
-			// subtract kg ingredients
+			
 			for (size_t j = 0; j < menu.getSizeOfMealNeedIngKg(indexMenuMeal); ++j) {
 				string ingName = menu.getNameOfMealNeedIngKg(indexMenuMeal, j);
 				int indexStockIng = stock.SearchIng(ingName, "kg");
@@ -2031,7 +2037,7 @@ public:
 				stock.setIngMassKg(indexStockIng, available - needed);
 			}
 
-			// subtract pieces ingredients
+			
 			for (size_t j = 0; j < menu.getSizeOfMealNeedIngPcs(indexMenuMeal); ++j) {
 				string ingName = menu.getNameOfMealNeedIngPcs(indexMenuMeal, j);
 				int indexStockIng = stock.SearchIng(ingName, "pieces");
@@ -2049,8 +2055,7 @@ public:
 			}
 		}
 
-		// Now subtract hot/cold drinks if stored similarly (example - adapt to your data model).
-		// ... (if you have hot/cold drinks in cart and they are stored in stock, do the same checks here)
+	
 
 		return true;
 	}
@@ -2061,7 +2066,7 @@ public:
 void main() {
 
 	Restaurant restaurant;
-
+	setColor(11);
 	cout << " __        __   _                               " << endl;
 	cout << " \\ \\      / /__| | ___ ___  _ __ ___   ___ " << endl;
 	cout << "  \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\"<<endl;
@@ -2069,19 +2074,22 @@ void main() {
 	cout << "    \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|"<< endl;
 	cout << endl;
 	cout << "                             T O   V A L H A L L A" << endl << endl << endl;
+	setColor(14);
 	char choise;
 
 	while (true)
 	{
+		setColor(14);
 		cout << "Enter the restaurant system" << endl << endl;
 		cout << "1. Admin Panel" << endl;
 		cout << "2. User Panel" << endl;
 		cout << "3. Exit" << endl;
+		setColor(14);
 		cout << "\n> ";
 
 		cin >> choise;
 		cin.ignore();
-
+		system("cls");
 		if (choise=='1'){
 
 			system("cls"); 
@@ -2092,19 +2100,24 @@ void main() {
 			cout << "Enter password: ";
 			getline(cin, password);
 
+			system("cls");
+
 			if (username=="admin"&&password=="valhalla")
 			{
+				setColor(14);
 				bool running = true;
-				system("cls");
-
 				cout << "Welcome to the system BOSS" << endl<<endl;
+
 				while(running){
+				setColor(14);
 				cout << "Choose where do you want to make change: \n" << endl;
+				
 				cout << "1. Menu" << endl;
 				cout << "2. Stock" << endl;
 				cout << "3. See Balance" << endl;
 				cout << "4. Add Balance" << endl;
 				cout << "5. Back" << endl;
+				setColor(14);
 				cout << "\n> ";
 				cin >> choise;
 				cin.ignore();
@@ -2115,7 +2128,7 @@ void main() {
 				case '1':
 
 					while(true){
-						
+						setColor(14);
 						cout << "1. Show Menu Items" << endl;
 						cout << "2. Add New Meal to Menu" << endl;
 						cout << "3. Add New Drink to Menu" << endl;
@@ -2123,6 +2136,7 @@ void main() {
 						cout << "5. Delete menu item" << endl;
 						cout << "6. Search and show info menu item" << endl;
 						cout << "7. Back" << endl<<endl;
+						setColor(14);
 						cout << "> ";
 
 					cin >> choise;
@@ -2140,15 +2154,13 @@ void main() {
 						string type;
 						string mealname;
 						double price;
+						setColor(14);
 						cout << "Type of Meal: \n" << endl;
 						cout << "1. Hot" << endl;
 						cout << "2. Cold" << endl;
 						cout << "\n> ";
-
+						
 						getline(cin, type);
-						
-						
-
 						if (type=="1")
 						{
 							type = "hot";
@@ -2157,14 +2169,19 @@ void main() {
 							type = "cold";
 						}
 						else {
+							setColor(12);
 							cout << "Wrong choice!!!" << endl;
+							setColor(14);
 						}
 
 						cout << "\nEnter name of meal: ";
 						getline(cin, mealname);
-
 						if (restaurant.SearchMeal(mealname) != -1) {
-							cout << "There is this meal in Menu already" << endl;
+
+							system("cls");
+							setColor(12);
+							cout << "There is this meal in Menu already\n" << endl;
+							setColor(14);
 							continue;
 						
 						}
@@ -2174,30 +2191,37 @@ void main() {
 						cin.ignore();
 						system("cls");
 						Meal meal(mealname, price,type);
-						
+						setColor(10);
 						cout << "Meal Created Successfully\n" << endl;
-
+						setColor(14);
 						while(1){
+							setColor(14);
 							cout << "1. Add ingredient" << endl;
 							cout << "2. Finish" << endl;
 							cout << "\n> ";
+							setColor(14);
 							cin >> choise;
 							cin.ignore();
 							system("cls");
+
 							if (choise=='1')
 							{
 								string ingType;
 								string ingName;
 								double mass; int count;
+								setColor(14);
 								cout << "Ingredient will be by: \n" << endl;
 								cout << "1. kg" << endl;
 								cout << "2. pieces" << endl;
 								cout << "\n> ";
+								setColor(14);
 								getline(cin, ingType);
+
+
 								cout << "Enter the ing name: ";
 								getline(cin, ingName);
 
-
+								
 
 								if (ingType=="1")
 								{
@@ -2208,8 +2232,9 @@ void main() {
 									IngredientWthKg neededIng(ingName, mass);
 									meal.addIngKg(neededIng);
 
+									setColor(10);
 									cout << "Ingredient Added Successfully\n" << endl;
-
+									setColor(14);
 								}
 								else if (ingType=="2")
 								{
@@ -2219,15 +2244,24 @@ void main() {
 									system("cls");
 									IngredientWthPcs neededIng(ingName, count);
 									meal.addIngPcs(neededIng);
+									setColor(10);
+									cout << "Ingredient Added Successfully\n" << endl;
+									setColor(14);
 								}
-								else {							
+								else {				
+									system("cls");
+									setColor(12);
 									cout << "Wrong choice!!!" << endl;
+									setColor(14);
 									continue;
 								}
 							}
 							else if (choise == '2') {
 								restaurant.addNewMeal(meal);
+								system("cls");
+								setColor(10);
 								cout << "Meal was added Menu successfully\n" << endl;
+								setColor(14);
 								break;
 							}
 						}
@@ -2237,32 +2271,66 @@ void main() {
 						string type;
 						string drinkname;
 						double price;
-						cout << "Type of Drink: " << endl;
+						setColor(14);
+						cout << "Type of Drink: \n" << endl;
 						cout << "1. Hot" << endl;
-						cout << "2. Cold" << endl;
+						cout << "2. Cold" << endl << endl;
 						cout << "> ";
+						setColor(14);
 						getline(cin, type);
-
 						if (type!="1" && type!="2")
 						{
-							cout << "Wrong choice!!!" << endl;
+							system("cls");
+							setColor(12);
+							cout << "Wrong choice!!!\n" << endl;
+							setColor(14);
 							continue;
 						}
 
 						cout << "Enter name of drink: ";
 						getline(cin, drinkname);
-						cout << "Enter the price of drink: ";
-						cin >> price;
-						cin.ignore();
+						
 
 						if (type=="1")
 						{
+							if (restaurant.SearchHotDrink(drinkname)!=-1)
+							{
+								system("cls");
+								setColor(12);
+								cout << "There is this drink in menu already\n" << endl;
+								setColor(14);
+								continue;
+							}
+							cout << "Enter the price of drink: ";
+							cin >> price;
+							cin.ignore();
+
+							system("cls");
 							HotDrink drink(drinkname, price);
 							restaurant.addNewDrink(drink);
+							setColor(10);
+							cout << "Hot Drink added Successfully\n" << endl;
+							setColor(14);
 						}
 						else if (type == "2") {
+							if (restaurant.SearchColdDrink(drinkname) != -1)
+							{
+								system("cls");
+								setColor(12);
+								cout << "There is this drink in menu already\n" << endl;
+								setColor(14);
+								continue;
+							}
+							cout << "Enter the price of drink: ";
+							cin >> price;
+							cin.ignore();
+
+							system("cls");
 							ColdDrink drink(drinkname, price);
 							restaurant.addNewDrink(drink);
+							setColor(10);
+							cout << "Cold Drink added Successfully\n" << endl;
+							setColor(14);
 						}
 					}
 
@@ -2275,6 +2343,7 @@ void main() {
 						cout << "Enter the name of Menu item: ";
 						getline(cin, name);
 
+						
 						index = restaurant.SearchMeal(name);
 
 						if (index!=-1)
@@ -2298,7 +2367,10 @@ void main() {
 
 						if (index==-1)
 						{
+							system("cls");
+							setColor(12);
 							cout << "There is no this item in menu" << endl;
+							setColor(14);
 						}
 						else {
 						
@@ -2308,21 +2380,32 @@ void main() {
 								cout << "Enter new price: $";
 								cin >> price;
 								cin.ignore();
+
+								system("cls");
 								restaurant.changePriceMeal(index, price);
+								setColor(10);
+								cout << "Price Changed Successfully" << endl;
+								setColor(14);
 							}
 							else if (place == "Hotd") {
 								cout << "Enter new price: $";
 								cin >> price;
 								cin.ignore();
+								system("cls");
 								restaurant.changePriceHotDrink(index, price);
-							
+								setColor(10);
+								cout << "Price Changed Successfully" << endl;
+								setColor(14);
 							}
 							else {
 								cout << "Enter new price: $";
 								cin >> price;
 								cin.ignore();
+								system("cls");
 								restaurant.changePriceColdDrink(index, price);
-
+								setColor(10);
+								cout << "Price Changed Successfully" << endl;
+								setColor(14);
 							}
 						
 						}
@@ -2333,52 +2416,73 @@ void main() {
 					else if (choise == '5') {
 						string name;
 						while (1) {
+							setColor(14);
 							cout << "1. Delete Meal" << endl;
 							cout << "2. Delete Hot Drink" << endl;
 							cout << "3. Delete Cold Drink" << endl;
-							cout << "4. Back" << endl;
+							cout << "4. Back" << endl << endl;
 							cout << "> ";
+							setColor(14);
 							cin >> choise;
 							cin.ignore();
-
+							system("cls");
 							if (choise == '1') {
 								cout << "Enter the name of unwanted meal: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchMeal(name);
 								if (index == -1) {
+
+									setColor(12);
 									cout << "There is no such meal in menu\n";
+									setColor(14);
 									continue;
 								}
 								restaurant.DeleteMeal(index);
+								setColor(10);
 								cout << "Meal deleted successfully!\n";
+								setColor(14);
 							}
 							else if (choise == '2') {
 								cout << "Enter the name of unwanted Hot Drink: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchHotDrink(name);
 								if (index == -1) {
+									setColor(12);
 									cout << "There is no such Hot Drink in menu\n";
+									setColor(14);
 									continue;
 								}
 								restaurant.DeleteHotDrink(index);
+								setColor(10);
 								cout << "Hot drink deleted successfully!\n";
+								setColor(14);
 							}
 							else if (choise == '3') {
 								cout << "Enter the name of unwanted Cold Drink: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchColdDrink(name);
 								if (index == -1) {
+									setColor(12);
 									cout << "There is no such Cold Drink in menu\n";
+									setColor(14);
 									continue;
 								}
 								restaurant.DeleteColdDrink(index);
+								setColor(10);
 								cout << "Cold drink deleted successfully!\n";
+								setColor(14);
 							}
 							else if (choise == '4') {
 								break;
 							}
 							else {
-								cout << "Wrong choice!!!" << endl;
+								system("cls");
+								setColor(12);
+								cout << "Wrong choice!!!\n" << endl;
+								setColor(14);
 								continue;
 							}
 						}
@@ -2390,33 +2494,44 @@ void main() {
 						string name;
 						int index;
 
-						cout << "Enter the name of menu item: " << endl;
-						cout << "> ";
+						cout << "Enter the name of menu item: ";
 						getline(cin, name);
+
+						system("cls");
 						index = restaurant.SearchMeal(name);
 
 						if (index != -1)
 						{
+							cout << endl;
 							restaurant.ShowMealInfo(index);
+							cout << endl;
 						}
 						else {
+
 							index = restaurant.SearchHotDrink(name);
 							if (index != -1)
 							{
+								cout << endl;
 								restaurant.ShowHotDrinkInfo(index);
+								cout << endl;
 							}
 							else {
 								index = restaurant.SearchColdDrink(name);
 								if (index != -1)
 								{
+									cout << endl;
 									restaurant.ShowColdDrinkInfo(index);
+									cout << endl;
 								}
 							}
 						}
 
 						if (index == -1)
 						{
-							cout << "There is no this item in menu" << endl;
+							system("cls");
+							setColor(12);
+							cout << "There is no this item in menu\n" << endl;
+							setColor(14);
 						}
 
 					}
@@ -2426,8 +2541,12 @@ void main() {
 					}
 					
 					else {
-					
+
+
+						system("cls");
+						setColor(12);
 						cout << "Wrong Choice!!"<<endl;
+						setColor(14);
 					}
 
 				}
@@ -2437,7 +2556,7 @@ void main() {
 				case '2':
 
 					while(1){
-
+					setColor(14);
 					cout << "1. Show Stock Items" << endl;
 					cout << "2. Add or Buy New Ingredient" << endl;
 					cout << "3. Decrease stock item" << endl;
@@ -2445,12 +2564,18 @@ void main() {
 					cout << "5. Search and show info stock item" << endl;
 					cout << "6. Back" << endl;
 					cout << "\n> ";
+					setColor(14);
 					cin >> choise;
 					cin.ignore();
 
+					system("cls");
+
 					if (choise=='1')
 					{
+						cout << endl;
 						restaurant.ShowStock();
+						cout << endl;
+
 					}
 
 					else if (choise == '2') {
@@ -2459,12 +2584,13 @@ void main() {
 						double price;
 
 						while (true) {
-						
+							setColor(14);
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
 							cout << "3. Finish" << endl;
 							cout << "\n> ";
+							setColor(14);
 
 							cin >> choise;
 							cin.ignore();
@@ -2476,6 +2602,7 @@ void main() {
 								double mass;
 								cout << "Enter the name of ingredient: ";
 								getline(cin,name);
+
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
@@ -2484,13 +2611,17 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to buy: ";
 									cin >> mass;
 									cin.ignore();
+									system("cls");
 									double price = restaurant.getIngredientPriceKG(index)*mass;
 									double newmass = mass + restaurant.getIngredientMassKG(index);
 									restaurant.setIngredientMassKg(index, newmass);
 									restaurant.reduceBalance(price);
 									restaurant.saveData();
-
-								}else{
+									setColor(10);
+									cout << "Ingredient Bought Successfully" << endl;
+									setColor(14);
+								}
+								else{
 
 								cout << "Enter the amount of ingredient(KG): ";
 								cin >> mass;
@@ -2499,12 +2630,17 @@ void main() {
 								cin >> price;
 								cin.ignore();
 
+								system("cls");
+
 								IngredientWthKg ing(name, mass);
 								ing.setPrice(price);
 								double redprice = mass * price;
 								restaurant.addNewIngredientKg(ing);
 								restaurant.reduceBalance(redprice);
 								restaurant.saveData();
+								setColor(10);
+								cout << "Ingredient Bought Successfully" << endl; 
+								setColor(14);
 								}
 							}
 
@@ -2522,12 +2658,18 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to buy: ";
 									cin >> pieces;
 									cin.ignore();
+
+									system("cls");
 									redprice = pieces * restaurant.getIngredientPricePCS(index);
 									double newpieces = pieces + restaurant.getInredientCountPcs(index);
 									restaurant.setIngredientCountPcs(index, newpieces);
 									restaurant.saveData();
+									setColor(10);
+									cout << "Ingredient Bought Successfully\n" << endl;
+									setColor(14);
 
-								} else {
+								} 
+								else {
 
 								cout << "Enter the amount of ingredient(Pieces): ";
 								cin >> pieces;
@@ -2535,6 +2677,7 @@ void main() {
 								cout << "Enter price per piece: ";
 								cin >> price;
 								cin.ignore();
+								system("cls");
 
 								IngredientWthPcs ing(name, pieces);
 								ing.setPrice(price);
@@ -2542,15 +2685,22 @@ void main() {
 								restaurant.addNewIngredientPcs(ing);
 								restaurant.reduceBalance(redprice);
 								restaurant.saveData();
+								setColor(10);
+								cout << "Ingredient Bought Successfully" << endl;
+								setColor(14);
 								}
 							}
 							
-							else if (choise == '3') {							
+							else if (choise == '3') {	
+								system("cls");
 								break;
 							}
 
 							else {
+								system("cls");
+								setColor(12);
 								cout << "Wrong Choice!!!" << endl;
+								setColor(14);
 								continue;
 							}
 						
@@ -2562,13 +2712,13 @@ void main() {
 						string name;
 						double price;
 						while (true) {
-
+							setColor(14);
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
 							cout << "3. Finish" << endl;
 							cout << "\n> ";
-
+							setColor(14);
 							cin >> choise;
 							cin.ignore();
 							string type;
@@ -2587,14 +2737,24 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to remove: ";
 									cin >> mass;
 									cin.ignore();
+
+									system("cls");
 									double newmass = restaurant.getIngredientMassKG(index)-mass;
 									restaurant.setIngredientMassKg(index, newmass);
-									restaurant.saveData();
 
+
+									restaurant.saveData();
+									setColor(10);
+									cout << "Ingredient updated successfully" << endl;
+									setColor(14);
 								}
+
 								else {
 
+									system("cls");
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
 								}
 							}
@@ -2605,7 +2765,6 @@ void main() {
 								int pieces;
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
-
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
@@ -2613,23 +2772,35 @@ void main() {
 									cout << "Enter the amount of ingredient that you want to remove: ";
 									cin >> pieces;
 									cin.ignore();
+									system("cls");
 									double newpieces = restaurant.getInredientCountPcs(index)-pieces;
 									restaurant.setIngredientCountPcs(index, newpieces);
 									restaurant.saveData();
-
+									setColor(10);
+									cout << "Ingredient updated successfully" << endl;
+									setColor(14);
 								}
 								else {
+
+									system("cls");
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
 								}
 							}
 
 							else if (choise == '3') {
+								system("cls");
 								break;
 							}
 
 							else {
+
+								system("cls");
+								setColor(12);
 								cout << "Wrong Choice!!!" << endl;
+								setColor(14);
 								continue;
 							}
 
@@ -2642,15 +2813,17 @@ void main() {
 						string name;
 
 						while (true) {
-
+							setColor(14);
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
-							cout << "3. Finish ingredient" << endl;
+							cout << "3. Finish" << endl;
 							cout << "\n> ";
+							setColor(14);
 
 							cin >> choise;
 							cin.ignore();
+
 							string type;
 
 							if (choise == '1')
@@ -2658,18 +2831,21 @@ void main() {
 								type = "kg";
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
 								{
-
 									restaurant.DeleteIngredientKG(index);
 									restaurant.saveData();
-
+									setColor(10);
+									cout << "Ingredient Removed Successfully" << endl;
+									setColor(14);
 								}
 								else {
-
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
 								}
 							}
@@ -2679,6 +2855,7 @@ void main() {
 								type = "pcs";
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
@@ -2686,24 +2863,31 @@ void main() {
 
 									restaurant.DeleteIngredientPCS(index);
 									restaurant.saveData();
-
+									setColor(10);
+									cout << "Ingredient Removed Successfully" << endl << endl;
+									setColor(14);
 								}
 								else {
-
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
+
 								}
 							}
 
 							else if (choise == '3') {
+								system("cls");
 								break;
 							}
 
 							else {
+								system("cls");
+								setColor(12);
 								cout << "Wrong Choice!!!" << endl;
+								setColor(14);
 								continue;
 							}
-
 						}
 					}
 
@@ -2712,15 +2896,17 @@ void main() {
 						string name;
 
 						while (true) {
-
+							setColor(14);
 							cout << "Enter the type of ingredient: " << endl << endl;
 							cout << "1. Kg" << endl;
 							cout << "2. Pieces" << endl;
 							cout << "3. Finish" << endl;
 							cout << "\n> ";
+							setColor(14);
 
 							cin >> choise;
 							cin.ignore();
+
 							string type;
 
 							if (choise == '1')
@@ -2728,17 +2914,20 @@ void main() {
 								type = "kg";
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
 								{
-
+									cout << endl;
 									restaurant.ShowIngredientKg(index);
+									cout << endl;
 
 								}
 								else {
-
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
 								}
 							}
@@ -2748,27 +2937,33 @@ void main() {
 								type = "pcs";
 								cout << "Enter the name of ingredient: ";
 								getline(cin, name);
+								system("cls");
 								int index = restaurant.SearchIngredient(name, type);
 
 								if (index != -1)
 								{
-
+									cout << endl;
 									restaurant.ShowIngredientPcs(index);
-
+									cout << endl;
 								}
 								else {
-
+									setColor(12);
 									cout << "There is not this ingredient in stock" << endl;
+									setColor(14);
 									continue;
 								}
 							}
 
 							else if (choise == '3') {
+								system("cls");
 								break;
 							}
 
 							else {
+								system("cls");
+								setColor(12);
 								cout << "Wrong Choice!!!" << endl;
+								setColor(14);
 								continue;
 							}
 
@@ -2777,14 +2972,15 @@ void main() {
 					}
 
 					else if (choise == '6') {
-					
+						system("cls");
 						break;
 					}
 
 					else {
-					
+
+						setColor(12);
 						cout << "Wrong Choice!!" << endl;
-					
+						setColor(14);
 					}
 
 					}
@@ -2792,104 +2988,125 @@ void main() {
 				break;
 
 				case '3':
+					system("cls");
 					restaurant.showBalance();
-
 					break;
+
 				case '4':
+
 					double adding;
 					cout << "Enter the amount of money you want to add: " << endl;
-					cout << "> ";
+					cout << "\n> ";
 					cin >> adding;
 					cin.ignore();
-
+					system("cls");
 					restaurant.addBalance(adding);
-
+					restaurant.saveData();
+					setColor(10);
+					cout <<"$ " << adding << " added balance successfully" << endl;
+					setColor(14);
 					break;
 				case '5':
 					running = false;
+					break;
+				default:
+					setColor(12);
+					cout << "Wrong Choice!!" << endl;
+					setColor(14);
 					break;
 				}			
 			}
 		}
 
 			else {
-			
+				setColor(12);
 				cout << "Username or password is wrong!!!" << endl;
-				
+				setColor(14);
 			}
 			}
 
 		else if (choise == '2') {
 		
 			while (1) {
-			
+				setColor(14);
 				cout << "1. Sign in" << endl;
 				cout << "2. Register" << endl;
 				cout << "3. Back" << endl;
-
+				setColor(14);
 				cin >> choise;
 				cin.ignore();
-
+				system("cls");
 				if (choise=='1')
 				{
-
 					string username, password;
 
 					cout << "Enter username: ";
 					getline(cin, username);
 					cout << "Enter password: ";
 					getline(cin, password);
-
+					system("cls");
 					int indexUser = restaurant.SearchUser(username);
 
 					if (indexUser==-1)
 					{
+						setColor(12);
 						cout << "Username or password is wrong" << endl; continue;
+						setColor(14);
 					}
 
 					if (restaurant.getPassword(indexUser)!=password)
 					{
+						setColor(12);
 						cout << "Username or password is wrong" << endl; continue;
+						setColor(14);
 					}
-					cout << "Welcome to the VALHALLA restaurant " << username << endl << endl;
-
+					setColor(11);
+					cout << "\nWelcome to the VALHALLA restaurant " << username << endl << endl;
+					setColor(14);
 					while (true)
 					{
+						setColor(14);
 						cout << "1. Show Menu" << endl;
 						cout << "2. Add to Cart" << endl;
 						cout << "3. See Your Cart" << endl;
 						cout << "4. See Your History" << endl;
 						cout << "5. Exit" << endl;
+						setColor(14);
 						cout << "\n> ";
 
 						cin >> choise;
 						cin.ignore();
-
+						system("cls");
 						if (choise=='1')
 						{
+							cout << endl;
 							restaurant.ShowMenu();
+							cout << endl;
 						}
 
 						else if (choise == '2') {
 						
 							while(1){
-
+								setColor(14);
 								cout << "1. Add meal" << endl;
 								cout << "2. Add Drink" << endl;
 								cout << "3. Finish" << endl;
+								setColor(14);
 								cout << "\n> ";
 								cin >> choise;
 								cin.ignore();
+								system("cls");
 
 							if (choise=='1') {
 
 								string nameMeal;
 								int howManyMeal;
 								string type;
-
+								setColor(14);
 								cout << "1. Hot meal\n2. Cold meal" << endl;
+								setColor(14);
 								getline(cin, type); 
-
+								system("cls");
 								if (type=="1")
 								{
 									type = "hot";
@@ -2899,35 +3116,44 @@ void main() {
 									type = "cold";
 								}
 								else {
+									setColor(12);
 									cout << "Wrong choice" << endl;
+									setColor(14);
 									continue;
 								}
 
-								cout << "Enter name of meal: " << endl;
+								cout << "Enter name of meal: ";
 								getline(cin,nameMeal);
-
+								
 								int indexMeal = restaurant.SearchMeal(nameMeal);
 
 								if (indexMeal==-1)
 								{
+									system("cls");
+									setColor(12);
 									cout << "There is no this meal in menu or it is out of stock." << endl;
+									setColor(14);
 									continue;
 								}
 
-								cout << "How many portions you want: "<<endl;
+								cout << "How many portions you want: ";
 								cin >> howManyMeal;
 								cin.ignore();
-
+								system("cls");
 								if (!restaurant.checkIng(nameMeal, howManyMeal))
 								{
+									setColor(12);
 									cout << "Sorry There is not enough ingredients for this meal for today." << endl;
+									setColor(14);
 									continue;
 								}						
 
 								Meal cartMeal(nameMeal,restaurant.getPriceofMeal(indexMeal),type);
 
 								cartMeal.setHowMany(howManyMeal);
-								cout << "\nAdded to cart successfully" << endl;
+								setColor(10);
+								cout << "\nAdded to cart successfully\n" << endl;
+								setColor(14);
 								restaurant.addMealCart(cartMeal);	
 
 							}
@@ -2937,8 +3163,11 @@ void main() {
 								string type;
 								string nameDrink;
 								int howManyDrink;
+								setColor(14);
 								cout << "1. Hot Drink\n2. Cold Drink" << endl;
+								setColor(14);
 								getline(cin, type);
+								system("cls");
 
 								if (type == "1")
 								{
@@ -2949,16 +3178,21 @@ void main() {
 
 									if (indexDrink == -1)
 									{
+										system("cls");
+										setColor(12);
 										cout << "There is no this Drink in menu or it is out of stock." << endl;
+										setColor(14);
 										continue;
 									}
 									cout << "How many portions you want: " << endl;
 									cin >> howManyDrink;
 									cin.ignore();
-
+									system("cls");
 									HotDrink cartHotDrink(nameDrink, restaurant.getPriceofHotDrink(indexDrink));
 									cartHotDrink.setHowMany(howManyDrink);
-
+									setColor(10);
+									cout << "\nAdded to cart successfully\n" << endl;
+									setColor(14);
 									restaurant.addHotDrinkCart(cartHotDrink);
 
 								}
@@ -2972,21 +3206,28 @@ void main() {
 
 									if (indexDrink == -1)
 									{
+										system("cls");
+										setColor(12);
 										cout << "There is no this Drink in menu or it is out of stock." << endl;
+										setColor(14);
 										continue;
 									}
 									cout << "How many portions you want: " << endl;
 									cin >> howManyDrink;
 									cin.ignore();
-
+									system("cls");
 									ColdDrink cartColdDrink(nameDrink, restaurant.getPriceofColdDrink(indexDrink));
 									cartColdDrink.setHowMany(howManyDrink);
-
+									setColor(10);
+									cout << "\nAdded to cart successfully\n" << endl;
+									setColor(14);
 									restaurant.addColdDrinkCart(cartColdDrink);
 								}
 
 								else {
+									setColor(12);
 									cout << "Wrong choice" << endl;
+									setColor(14);
 									continue;
 								}																								
 							}
@@ -2996,60 +3237,74 @@ void main() {
 							}
 
 							else { 
-								cout << "Wrong Choice" << endl; continue; 
+								setColor(12);
+								cout << "Wrong Choice" << endl;
+								setColor(14);
+								continue; 
+								
 							}
 							} 							
 
 						}
 
 						else if (choise == '3') {
-
+							cout << endl;
 							restaurant.ShowCart();
 							cout << endl;
 
 							while (true) {
+								setColor(14);
 								cout << "\n1. Finish and Pay" << endl;
 								cout << "2. Edit Cart" << endl;
 								cout << "3. Back" << endl;
+								setColor(14);
 								cout << "\n> ";
 								cin >> choise;
 								cin.ignore();
 
-
+								system("cls");
 
 								if (choise == '1') {
 									if (restaurant.isCartEmpty()) {
+										setColor(12);
 										cout << "Your cart is empty!" << endl;
+										setColor(14);
 										continue;
 									}
 
 									if (!restaurant.removeFromStock()) {
+										setColor(12);
 										cout << "Payment aborted: could not remove items from stock. Please review your cart or contact admin." << endl;
-										// optionally show cart again or break/continue depending on desired behavior
-										continue; // keep user in cart menu so they can fix it
+										setColor(14);
+										continue; 
 									}
 
 									restaurant.addBalance(restaurant.getCartTotalPayment());
 									restaurant.addCartToUser(indexUser);
 									restaurant.saveData();
 									restaurant.clearCart();
-									cout << "Payment successful. Thank you for your purchase!" << endl;
+									setColor(10);
+									cout << "\nPayment successful. Thank you for your purchase!\n" << endl;
+									setColor(14);
 									break;
 								}
 
 								else if (choise == '2') {
 									while (true) {
-										system("cls");
-										cout << "=== Editing Your Cart ===" << endl;
+										system("cls"); setColor(14);
+										cout << "Editing Your Cart" << endl;
+										setColor(14);
 										restaurant.ShowCart();
+										setColor(14);
 										cout << "\n1. Change quantity" << endl;
 										cout << "2. Remove item" << endl;
 										cout << "3. Clear entire cart" << endl;
 										cout << "4. Back" << endl;
+										setColor(14);
 										cout << "\n> ";
 										cin >> choise;
 										cin.ignore();
-
+										system("cls");
 										if (choise == '1') {
 											string itemName;
 											int newQty;
@@ -3058,30 +3313,47 @@ void main() {
 											cout << "Enter new quantity: ";
 											cin >> newQty;
 											cin.ignore();
-											if (!restaurant.updateCartQuantity(itemName, newQty))
+											system("cls");
+											if (!restaurant.updateCartQuantity(itemName, newQty)) {
+												setColor(12);
 												cout << "Item not found in cart! or Not Enough ingredient!" << endl;
-											else
+												setColor(14);
+											}
+											else {
+												setColor(10);
 												cout << "Quantity updated successfully!" << endl;
+												setColor(14);
+											}
 										}
 
 										else if (choise == '2') {
 											string itemName;
 											cout << "Enter item name to remove: ";
 											getline(cin, itemName);
-											if (!restaurant.removeItemFromCart(itemName))
+											system("cls");
+											if (!restaurant.removeItemFromCart(itemName)) {
+												setColor(12);
 												cout << "Item not found in cart!" << endl;
-											else
+												setColor(14);
+											}
+											else {
+												setColor(10);
 												cout << "Item removed successfully!" << endl;
+												setColor(14);
+											}
 										}
 										else if (choise == '3') {
-											restaurant.clearCart();
+											restaurant.clearCart(); setColor(10);
 											cout << "Cart cleared successfully!" << endl;
+											setColor(14);
 										}
 										else if (choise == '4') {
 											break;
 										}
 										else {
+											setColor(12);
 											cout << "Wrong choice!" << endl;
+											setColor(14);
 										}
 									}
 								}
@@ -3090,28 +3362,30 @@ void main() {
 									break;
 								}
 								else {
+									setColor(12);
 									cout << "Wrong choice!" << endl;
-								}
+									setColor(14);
+}
 							}
 }
 
 						else if (choise == '4') {
 						
+							cout << endl;
 							restaurant.ShowCartHistory(indexUser);
-						
+							cout << endl;
 						}
 
 						else if (choise == '5') {
 							break;
 						}
 						else {
+							setColor(12);
 							cout << "Wrong Choice!!"<<endl;
+							setColor(14);
 							continue;
 						}
 					}
-
-
-
 				}
 
 				else if (choise == '2') {
@@ -3120,10 +3394,14 @@ void main() {
 
 					cout << "Enter username: ";
 					getline(cin, username);
+					
 
 					if (restaurant.SearchUser(username)!=-1)
 					{
+						system("cls");
+						setColor(12);
 						cout << "This user already exists" << endl;
+						setColor(14);
 						continue;
 					}
 
@@ -3132,10 +3410,12 @@ void main() {
 
 					cout << "Confirm password: ";
 					getline(cin, confirmpass);
-				
+					system("cls");
 					if (password!=confirmpass)
 					{
+						setColor(12);
 						cout << "Passwords do not match";
+						setColor(14);
 						continue;
 					}
 					
@@ -3143,8 +3423,10 @@ void main() {
 
 					restaurant.addUser(user);
 					restaurant.saveData();
-
-				}
+					setColor(10);
+					cout << "\nRegistered Succesfully" << endl;
+					setColor(14);
+}
 
 				else if (choise == '3') {
 					break;
@@ -3158,8 +3440,10 @@ void main() {
 			break;
 		}
 		else {
+			setColor(12);
 			cout << "Wrong Choice!!!" << endl;
-		}
+			setColor(14);
+}
 		
 
 	}
