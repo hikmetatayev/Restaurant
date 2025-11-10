@@ -108,7 +108,7 @@ public:
 	}
 
 	void setName(string& name) {
-		if (name.length() < 4)
+		if (name.length() < 3)
 		{
 			throw string("Name of Ingredient cannot be less than 4 character");
 		}
@@ -1835,19 +1835,12 @@ public:
 	
 		return menu.getPriceColdDrink(index);
 	}
-
-	
+		
 
 	
 	int getSizeofNeedPCS(int index) {
 	
 		return cart.getSizeofNeedPCS(index);
-	
-	}
-
-	string getIngNameKG(int indexMeal,int indexIng) {
-	
-		
 	
 	}
 
@@ -2444,7 +2437,7 @@ void main() {
 									continue;
 								}
 								setColor(10);
-								cout << "Price Changed Successfully" << endl;
+								cout << "Price Changed Successfully\n" << endl;
 								setColor(14);
 							}
 							else if (place == "Hotd") {
@@ -2455,7 +2448,7 @@ void main() {
 								try { restaurant.changePriceHotDrink(index, price); }
 								catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
 								setColor(10);
-								cout << "Price Changed Successfully" << endl;
+								cout << "Price Changed Successfully\n" << endl;
 								setColor(14);
 							}
 							else {
@@ -2466,7 +2459,7 @@ void main() {
 								try { restaurant.changePriceHotDrink(index, price); }
 								catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
 								setColor(10);
-								cout << "Price Changed Successfully" << endl;
+								cout << "Price Changed Successfully\n" << endl;
 								setColor(14);
 							}
 						
@@ -2680,7 +2673,7 @@ void main() {
 									restaurant.reduceBalance(price);
 									restaurant.saveData();
 									setColor(10);
-									cout << "Ingredient Bought Successfully" << endl;
+									cout << "Ingredient Bought Successfully\n" << endl;
 									setColor(14);
 								}
 								else{
@@ -2707,7 +2700,7 @@ void main() {
 
 								}
 								setColor(10);
-								cout << "Ingredient Bought Successfully" << endl; 
+								cout << "Ingredient Bought Successfully\n" << endl; 
 								setColor(14);
 								}
 							}
@@ -2765,7 +2758,7 @@ void main() {
 									continue;
 								}
 								setColor(10);
-								cout << "Ingredient Bought Successfully" << endl;
+								cout << "Ingredient Bought Successfully\n" << endl;
 								setColor(14);
 								}
 							}
@@ -2830,7 +2823,7 @@ void main() {
 
 									
 									setColor(10);
-									cout << "Ingredient updated successfully" << endl;
+									cout << "Ingredient updated successfully\n" << endl;
 									setColor(14);
 								}
 
@@ -2838,7 +2831,7 @@ void main() {
 
 									system("cls");
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 								}
@@ -2868,14 +2861,14 @@ void main() {
 										continue;
 									}
 									setColor(10);
-									cout << "Ingredient updated successfully" << endl;
+									cout << "Ingredient updated successfully\n" << endl;
 									setColor(14);
 								}
 								else {
 
 									system("cls");
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 								}
@@ -2936,12 +2929,12 @@ void main() {
 										continue;
 									}
 									setColor(10);
-									cout << "Ingredient Removed Successfully" << endl;
+									cout << "Ingredient Removed Successfully\n" << endl;
 									setColor(14);
 								}
 								else {
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 								}
@@ -2966,12 +2959,12 @@ void main() {
 										continue;
 									}
 									setColor(10);
-									cout << "Ingredient Removed Successfully" << endl << endl;
+									cout << "Ingredient Removed Successfully\n" << endl << endl;
 									setColor(14);
 								}
 								else {
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 
@@ -3028,7 +3021,7 @@ void main() {
 								}
 								else {
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 								}
@@ -3050,7 +3043,7 @@ void main() {
 								}
 								else {
 									setColor(12);
-									cout << "There is not this ingredient in stock" << endl;
+									cout << "There is not this ingredient in stock\n" << endl;
 									setColor(14);
 									continue;
 								}
@@ -3111,7 +3104,7 @@ void main() {
 						continue;
 					}
 					setColor(10);
-					cout <<"$ " << adding << " added balance successfully" << endl;
+					cout <<"$ " << adding << " added balance successfully\n" << endl;
 					setColor(14);
 					break;
 				case '5':
@@ -3445,12 +3438,12 @@ void main() {
 											try{
 											if (!restaurant.updateCartQuantity(itemName, newQty)) {
 												setColor(12);
-												cout << "Item not found in cart! or Not Enough ingredient!" << endl;
+												cout << "Item not found in cart! or Not Enough ingredient!\n" << endl;
 												setColor(14);
 											}
 											else {
 												setColor(10);
-												cout << "Quantity updated successfully!" << endl;
+												cout << "Quantity updated successfully!\n" << endl;
 												setColor(14);
 											}
 											}
@@ -3467,18 +3460,18 @@ void main() {
 											system("cls");
 											if (!restaurant.removeItemFromCart(itemName)) {
 												setColor(12);
-												cout << "Item not found in cart!" << endl;
+												cout << "Item not found in cart!\n" << endl;
 												setColor(14);
 											}
 											else {
 												setColor(10);
-												cout << "Item removed successfully!" << endl;
+												cout << "Item removed successfully!\n" << endl;
 												setColor(14);
 											}
 										}
 										else if (choise == '3') {
 											restaurant.clearCart(); setColor(10);
-											cout << "Cart cleared successfully!" << endl;
+											cout << "Cart cleared successfully!\n" << endl;
 											setColor(14);
 										}
 										else if (choise == '4') {
