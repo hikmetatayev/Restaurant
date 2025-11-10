@@ -1371,12 +1371,45 @@ class Restaurant {
 public:
 
 	Restaurant() {
-		try {
-			this->loadData();
+		try{
+			loadBalance();
 		}
-		catch (const string& msg) {
-			cout << msg << endl;
-			this->saveData();
+		catch(const string& s){
+			saveBalance();
+		
+		}
+		try {
+			stock.loadDatafromStock();
+		}
+		catch (const string& s) {
+			stock.saveDatatoStock();
+
+		}
+		try {
+			menu.loadDataFromMenu();
+		}
+		catch (const string& s) {
+			menu.saveDatatoMenu();
+
+		}
+		try {
+			menu.loadDataFromMeals();
+		}
+		catch (const string& s) {
+			menu.saveDatatoMeals();
+
+		}
+		
+		
+		try{ loadUsers(); }
+		catch (const string& s) {
+			saveUsers();
+
+		}
+		try{ loadHistory(); }
+		catch (const string& s) {
+			saveHistory();
+
 		}
 
 	}
@@ -1575,7 +1608,6 @@ public:
 		menu.loadDataFromMenu();
 		menu.loadDataFromMeals();	
 		loadUsers();
-
 		loadHistory();
 	}
 
@@ -2190,7 +2222,10 @@ void main() {
 						cin >> price;
 						cin.ignore();
 						system("cls");
-						Meal meal(mealname, price,type);
+						
+							Meal meal(mealname, price, type);
+						
+						
 						setColor(10);
 						cout << "Meal Created Successfully\n" << endl;
 						setColor(14);
@@ -2229,8 +2264,15 @@ void main() {
 									cin>> mass;
 									cin.ignore();
 									system("cls");
-									IngredientWthKg neededIng(ingName, mass);
-									meal.addIngKg(neededIng);
+									try { 
+										IngredientWthKg neededIng(ingName, mass); 
+										meal.addIngKg(neededIng);
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
+									
 
 									setColor(10);
 									cout << "Ingredient Added Successfully\n" << endl;
@@ -2242,8 +2284,12 @@ void main() {
 									cin >> count;
 									cin.ignore();
 									system("cls");
-									IngredientWthPcs neededIng(ingName, count);
+
+									try { IngredientWthPcs neededIng(ingName, count); 
 									meal.addIngPcs(neededIng);
+									}
+									catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); }
+									
 									setColor(10);
 									cout << "Ingredient Added Successfully\n" << endl;
 									setColor(14);
@@ -2306,12 +2352,17 @@ void main() {
 							cin.ignore();
 
 							system("cls");
-							HotDrink drink(drinkname, price);
+
+							try { HotDrink drink(drinkname, price);
 							restaurant.addNewDrink(drink);
+							}
+							catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
+							
 							setColor(10);
 							cout << "Hot Drink added Successfully\n" << endl;
 							setColor(14);
 						}
+
 						else if (type == "2") {
 							if (restaurant.SearchColdDrink(drinkname) != -1)
 							{
@@ -2326,8 +2377,11 @@ void main() {
 							cin.ignore();
 
 							system("cls");
-							ColdDrink drink(drinkname, price);
+							try { ColdDrink drink(drinkname, price); 
 							restaurant.addNewDrink(drink);
+							}
+							catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
+							
 							setColor(10);
 							cout << "Cold Drink added Successfully\n" << endl;
 							setColor(14);
@@ -2382,7 +2436,13 @@ void main() {
 								cin.ignore();
 
 								system("cls");
+								try{
 								restaurant.changePriceMeal(index, price);
+								}
+								catch (const string& s) {
+									setColor(12);cout << s << endl<<endl;setColor(14);
+									continue;
+								}
 								setColor(10);
 								cout << "Price Changed Successfully" << endl;
 								setColor(14);
@@ -2392,7 +2452,8 @@ void main() {
 								cin >> price;
 								cin.ignore();
 								system("cls");
-								restaurant.changePriceHotDrink(index, price);
+								try { restaurant.changePriceHotDrink(index, price); }
+								catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
 								setColor(10);
 								cout << "Price Changed Successfully" << endl;
 								setColor(14);
@@ -2402,7 +2463,8 @@ void main() {
 								cin >> price;
 								cin.ignore();
 								system("cls");
-								restaurant.changePriceColdDrink(index, price);
+								try { restaurant.changePriceHotDrink(index, price); }
+								catch (const string& s) { setColor(12);cout << s << endl<<endl;setColor(14); continue; }
 								setColor(10);
 								cout << "Price Changed Successfully" << endl;
 								setColor(14);
@@ -2631,13 +2693,19 @@ void main() {
 								cin.ignore();
 
 								system("cls");
+								try {
+									IngredientWthKg ing(name, mass);
+									ing.setPrice(price);
+									double redprice = mass * price;
+									restaurant.addNewIngredientKg(ing);
+									restaurant.reduceBalance(redprice);
+									restaurant.saveData();
+								}
+								catch (const string& s) {
+									setColor(12);cout << s << endl<<endl;setColor(14);
+									continue;
 
-								IngredientWthKg ing(name, mass);
-								ing.setPrice(price);
-								double redprice = mass * price;
-								restaurant.addNewIngredientKg(ing);
-								restaurant.reduceBalance(redprice);
-								restaurant.saveData();
+								}
 								setColor(10);
 								cout << "Ingredient Bought Successfully" << endl; 
 								setColor(14);
@@ -2662,8 +2730,14 @@ void main() {
 									system("cls");
 									redprice = pieces * restaurant.getIngredientPricePCS(index);
 									double newpieces = pieces + restaurant.getInredientCountPcs(index);
+									try{
 									restaurant.setIngredientCountPcs(index, newpieces);
 									restaurant.saveData();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 									setColor(10);
 									cout << "Ingredient Bought Successfully\n" << endl;
 									setColor(14);
@@ -2678,13 +2752,18 @@ void main() {
 								cin >> price;
 								cin.ignore();
 								system("cls");
-
+								try{
 								IngredientWthPcs ing(name, pieces);
 								ing.setPrice(price);
 								redprice = pieces * price;
 								restaurant.addNewIngredientPcs(ing);
 								restaurant.reduceBalance(redprice);
 								restaurant.saveData();
+								}
+								catch (const string& s) {
+									setColor(12);cout << s << endl<<endl;setColor(14);
+									continue;
+								}
 								setColor(10);
 								cout << "Ingredient Bought Successfully" << endl;
 								setColor(14);
@@ -2740,10 +2819,16 @@ void main() {
 
 									system("cls");
 									double newmass = restaurant.getIngredientMassKG(index)-mass;
+									try{
 									restaurant.setIngredientMassKg(index, newmass);
-
-
 									restaurant.saveData();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
+
+									
 									setColor(10);
 									cout << "Ingredient updated successfully" << endl;
 									setColor(14);
@@ -2774,8 +2859,14 @@ void main() {
 									cin.ignore();
 									system("cls");
 									double newpieces = restaurant.getInredientCountPcs(index)-pieces;
+									try{
 									restaurant.setIngredientCountPcs(index, newpieces);
 									restaurant.saveData();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 									setColor(10);
 									cout << "Ingredient updated successfully" << endl;
 									setColor(14);
@@ -2836,8 +2927,14 @@ void main() {
 
 								if (index != -1)
 								{
+									try{
 									restaurant.DeleteIngredientKG(index);
 									restaurant.saveData();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 									setColor(10);
 									cout << "Ingredient Removed Successfully" << endl;
 									setColor(14);
@@ -2860,9 +2957,14 @@ void main() {
 
 								if (index != -1)
 								{
-
+									try{
 									restaurant.DeleteIngredientPCS(index);
 									restaurant.saveData();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 									setColor(10);
 									cout << "Ingredient Removed Successfully" << endl << endl;
 									setColor(14);
@@ -3000,8 +3102,14 @@ void main() {
 					cin >> adding;
 					cin.ignore();
 					system("cls");
+					try{
 					restaurant.addBalance(adding);
 					restaurant.saveData();
+					}
+					catch (const string& s) {
+						setColor(12);cout << s << endl<<endl;setColor(14);
+						continue;
+					}
 					setColor(10);
 					cout <<"$ " << adding << " added balance successfully" << endl;
 					setColor(14);
@@ -3031,7 +3139,8 @@ void main() {
 				setColor(14);
 				cout << "1. Sign in" << endl;
 				cout << "2. Register" << endl;
-				cout << "3. Back" << endl;
+				cout << "3. Back" << endl << endl;
+				cout << "> ";
 				setColor(14);
 				cin >> choise;
 				cin.ignore();
@@ -3061,7 +3170,7 @@ void main() {
 						setColor(14);
 					}
 					setColor(11);
-					cout << "\nWelcome to the VALHALLA restaurant " << username << endl << endl;
+					cout << "Welcome to the VALHALLA restaurant " << username << endl << endl;
 					setColor(14);
 					while (true)
 					{
@@ -3073,7 +3182,6 @@ void main() {
 						cout << "5. Exit" << endl;
 						setColor(14);
 						cout << "\n> ";
-
 						cin >> choise;
 						cin.ignore();
 						system("cls");
@@ -3103,7 +3211,7 @@ void main() {
 								int howManyMeal;
 								string type;
 								setColor(14);
-								cout << "1. Hot meal\n2. Cold meal" << endl;
+								cout << "1. Hot meal\n2. Cold meal\n\n> ";
 								setColor(14);
 								getline(cin, type); 
 								system("cls");
@@ -3147,7 +3255,7 @@ void main() {
 									setColor(14);
 									continue;
 								}						
-
+								try{
 								Meal cartMeal(nameMeal,restaurant.getPriceofMeal(indexMeal),type);
 
 								cartMeal.setHowMany(howManyMeal);
@@ -3155,7 +3263,11 @@ void main() {
 								cout << "\nAdded to cart successfully\n" << endl;
 								setColor(14);
 								restaurant.addMealCart(cartMeal);	
-
+								}
+								catch (const string& s) {
+									setColor(12);cout << s << endl<<endl;setColor(14);
+									continue;
+								}
 							}
 
 							else if (choise == '2') {
@@ -3164,14 +3276,14 @@ void main() {
 								string nameDrink;
 								int howManyDrink;
 								setColor(14);
-								cout << "1. Hot Drink\n2. Cold Drink" << endl;
+								cout << "1. Hot Drink\n2. Cold Drink\n\n> ";
 								setColor(14);
 								getline(cin, type);
 								system("cls");
 
 								if (type == "1")
 								{
-									cout << "Enter name of drink: " << endl;
+									cout << "Enter name of drink: ";
 									getline(cin, nameDrink);
 
 									int indexDrink = restaurant.SearchHotDrink(nameDrink);
@@ -3184,22 +3296,27 @@ void main() {
 										setColor(14);
 										continue;
 									}
-									cout << "How many portions you want: " << endl;
+									cout << "How many portions you want: ";
 									cin >> howManyDrink;
 									cin.ignore();
 									system("cls");
+									try{
 									HotDrink cartHotDrink(nameDrink, restaurant.getPriceofHotDrink(indexDrink));
 									cartHotDrink.setHowMany(howManyDrink);
 									setColor(10);
 									cout << "\nAdded to cart successfully\n" << endl;
 									setColor(14);
 									restaurant.addHotDrinkCart(cartHotDrink);
-
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 								}
 
 								else if (type == "2") {
 
-									cout << "Enter name of drink: " << endl;
+									cout << "Enter name of drink: ";
 									getline(cin, nameDrink);
 
 									int indexDrink = restaurant.SearchColdDrink(nameDrink);
@@ -3212,16 +3329,22 @@ void main() {
 										setColor(14);
 										continue;
 									}
-									cout << "How many portions you want: " << endl;
+									cout << "How many portions you want: ";
 									cin >> howManyDrink;
 									cin.ignore();
 									system("cls");
+									try{
 									ColdDrink cartColdDrink(nameDrink, restaurant.getPriceofColdDrink(indexDrink));
 									cartColdDrink.setHowMany(howManyDrink);
 									setColor(10);
 									cout << "\nAdded to cart successfully\n" << endl;
 									setColor(14);
 									restaurant.addColdDrinkCart(cartColdDrink);
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 								}
 
 								else {
@@ -3278,11 +3401,16 @@ void main() {
 										setColor(14);
 										continue; 
 									}
-
+									try{
 									restaurant.addBalance(restaurant.getCartTotalPayment());
 									restaurant.addCartToUser(indexUser);
 									restaurant.saveData();
 									restaurant.clearCart();
+									}
+									catch (const string& s) {
+										setColor(12);cout << s << endl<<endl;setColor(14);
+										continue;
+									}
 									setColor(10);
 									cout << "\nPayment successful. Thank you for your purchase!\n" << endl;
 									setColor(14);
@@ -3314,6 +3442,7 @@ void main() {
 											cin >> newQty;
 											cin.ignore();
 											system("cls");
+											try{
 											if (!restaurant.updateCartQuantity(itemName, newQty)) {
 												setColor(12);
 												cout << "Item not found in cart! or Not Enough ingredient!" << endl;
@@ -3323,6 +3452,11 @@ void main() {
 												setColor(10);
 												cout << "Quantity updated successfully!" << endl;
 												setColor(14);
+											}
+											}
+											catch (const string& s) {
+												setColor(12);cout << s << endl<<endl;setColor(14);
+												continue;
 											}
 										}
 
@@ -3414,15 +3548,20 @@ void main() {
 					if (password!=confirmpass)
 					{
 						setColor(12);
-						cout << "Passwords do not match";
+						cout << "Passwords do not match!!" << endl;
 						setColor(14);
 						continue;
 					}
-					
+					try{
 					User user(username, password);
 
 					restaurant.addUser(user);
 					restaurant.saveData();
+					}
+					catch (const string& s) {
+						setColor(12);cout << s << endl<<endl;setColor(14);
+						continue;
+					}
 					setColor(10);
 					cout << "\nRegistered Succesfully" << endl;
 					setColor(14);

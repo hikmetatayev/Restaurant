@@ -1,7 +1,34 @@
-meal#pizza#10#hot#Parmezan#0.2
-Colddrink#cola#3.5#cold
-Colddrink#cola#2#cold
-Colddrink#cola#2#cold
-Colddrink#Sprite#12#cold
-Colddrink#Spritee#12#cold
-Colddrink#Spriteee#12#cold
+meal#Beef Burger#5#hot#patty#0.2#cheddar#0.1#lettuce#0.2#tomato#0.15#onion#0.15#ketchup#0.1#mayonnaise#0.2#pickles#8
+meal#Chicken Burger#5#hot#fillet#0.2#lettuce#0.2#tomato#0.15#mayonnaise#0.2
+meal#Cheese Burger#4#hot#cheddar#0.2#patty#0.4#onion#0.2#mustard#0.1#ketchup#0.1#pickles#8
+meal#Bacon Burger#10#hot#patty#0.2#bacon#0.2#cheddar#0.1#lettuce#0.2
+meal#Chicken Wrap#3#hot#lettuce#0.2#tomato#0.1#bread#1#strips#4
+meal#Hot Dog#2#hot#mustard#0.1#ketchup#0.1#onion#0.1#sausage#1
+meal#Pizza Pepperoni#12#hot#mozarella#0.3#tomato#0.2#flour#0.25#pepperoni#15
+meal#Chicken Nuggets#6#hot#chicken#0.3#garlic#0.1
+meal#Beef Qutab#1.5#hot#flour#0.2#beef#0.3#onion#0.15#pepper#0.1#butter#0.1
+meal#Beef Kebab#20#hot#chicken#0.3#onion#0.15#tomato#0.15#pepper#0.1#butter#0.1
+meal#Caesar Salad#7#cold#chicken#0.3#lettuce#0.2#parmesan#0.2#croutons#10
+meal#Tuna Sandwich#5#cold#tuna#0.2#mayonnaise#0.2#bread#1
+meal#Club Sandwich#6#cold#turkey#0.3#bacon#0.2#lettuce#0.2#tomato#0.2#mayonnaise#0.2#bread#1
+meal#Greek Salad#7#cold#tomato#0.2#cucumber#0.2#onion#0.15#feta#0.2#oliveoil#0.1#olives#6
+meal#Cold Pasta Salad#5#cold#pasta#0.2#mozarella#0.2#cherry#8
+meal#Coleslaw Salad#8#cold#cabbage#0.2#carrot#0.2#mayonnaise#0.2#vinegar#0.2#sugar#0.05#salt#0.05
+meal#Avocado Salad#10#cold#lettuce#0.1#cucumber#0.2#avocado#1#lemon#1
+meal#Dovga#2#cold#yogurt#0.5#rice#0.1#peas#0.4
+meal#Lentil Salad#3#cold#lentil#0.5#onion#0.15#oliveoil#0.1#lemon#1
+meal#Beef Salad#7#cold#beef#0.2#mayonnaise#0.2#pepper#0.1#pickles#8
+Hotdrink#Black Tea#2#hot
+Hotdrink#Green Tea#3#hot
+Hotdrink#Americano#3#hot
+Hotdrink#Latte#4#hot
+Hotdrink#Cappucino#4#hot
+Colddrink#Fanta#3#cold
+Colddrink#Coca Cola#3#cold
+Colddrink#Sprite#3#cold
+Colddrink#Dushes#4#cold
+Colddrink#Ayran#2#cold
+Colddrink#Fuse Tea#5#cold
+Colddrink#Lemonade#4#cold
+Colddrink#Seven Up#3#cold
+Colddrink#Lipton#3#cold
